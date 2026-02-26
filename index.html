@@ -226,7 +226,8 @@
             'F': ["1NxmmopLCE8MVop6KhKUZcMT_9pumSSrm", "1h7wiT4nS2JRnjjVQZyn4mrBTs63zo7VR", "14_z7kIQoMwM4dDBa88Dy7Uc4l1vvdkfd", "14iCS0DA1bCpb4TnWCjTplIDc6OY0jF_r", "1ZZZE7eSx8YZ_cLugITHY4RDGWPWDyjE4"]
         };
 
-        let currentSet = []; let currentIdx = 0;
+        let currentSet = []; 
+        let currentIdx = 0;
         const lb = document.getElementById('lightbox');
         const lbImg = document.getElementById('lightbox-img');
         const lbInfo = document.getElementById('lb-info');
@@ -240,8 +241,10 @@
         }
 
         function updateLb() {
-            // ✅ 已修正關鍵語法：這裡使用了 ${currentSet[currentIdx]} 來正確讀取變數
-            lbImg.src = `https://lh3.googleusercontent.com/d/${currentSet[currentIdx]}`;
+            // 修正點：使用 ${} 語法，並確保 Google Drive 的 ID 能被正確讀取
+            // 建議使用以下這種通用的 Drive 預覽網址格式
+            const imageId = currentSet[currentIdx];
+            lbImg.src = `https://drive.google.com/uc?export=view&id=${imageId}`;
             lbInfo.innerText = `${currentIdx + 1} / ${currentSet.length}`;
         }
 
@@ -250,7 +253,10 @@
             updateLb();
         }
 
-        function closeLightbox() { lb.style.display = 'none'; document.body.style.overflow = 'auto'; }
+        function closeLightbox() { 
+            lb.style.display = 'none'; 
+            document.body.style.overflow = 'auto'; 
+        }
 
         document.addEventListener('keydown', (e) => {
             if (lb.style.display === 'flex') {
