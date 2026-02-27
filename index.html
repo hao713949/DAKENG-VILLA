@@ -14,7 +14,6 @@
             --gold: #d4af37;
             --grey: #f9f9f9;
             --nav-grey: rgba(238, 238, 238, 0.95);
-            --border: rgba(212, 175, 55, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang TC", "Heiti TC", sans-serif; scroll-behavior: smooth; }
@@ -32,7 +31,6 @@
         }
         .logo { color: var(--dark); text-decoration: none; font-size: 1.1rem; letter-spacing: 2px; font-weight: 400; z-index: 1002; }
         
-        /* 漢堡按鈕 */
         .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); z-index: 1002; }
 
         .nav-links { display: flex; gap: 20px; }
@@ -95,7 +93,7 @@
         .progress-login input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; outline: none; }
         .btn-login { width: 100%; padding: 12px; background: var(--dark); color: #fff; border: none; cursor: pointer; letter-spacing: 2px; }
 
-        /* 彈窗樣式 */
+        /* 彈窗與輪播樣式 */
         .modal { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; padding: 20px; }
         .modal.active { display: flex; }
         .modal-body { background: #111; width: 100%; max-width: 1100px; display: flex; flex-wrap: wrap; position: relative; max-height: 90vh; overflow-y: auto; }
@@ -105,7 +103,6 @@
         .spec-label { width: 110px; color: var(--gold); font-weight: bold; font-size: 0.9rem; flex-shrink: 0; }
         .spec-val { color: #999; font-size: 0.9rem; }
 
-        /* 輪播 Lightbox */
         #gallery { display:none; position:fixed; inset:0; z-index:3000; background:#000; flex-direction: column; }
         #gallery.active { display:flex; }
         .swiper-container { width: 100%; height: 100%; }
@@ -113,16 +110,22 @@
         .swiper-slide img { max-width: 90%; max-height: 85vh; object-fit: contain; }
         .close-btn { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 35px; cursor: pointer; z-index: 3100; }
 
-        /* 行動端優化 */
+        /* --- 行動端優化 (白灰配色) --- */
         @media (max-width: 800px) {
             .menu-toggle { display: block; }
             .nav-links {
                 position: fixed; top: 0; right: -100%; width: 75%; height: 100vh;
-                background: #fff; flex-direction: column; padding: 100px 40px;
-                transition: 0.4s; box-shadow: -10px 0 30px rgba(0,0,0,0.2); gap: 30px;
+                background: #fdfdfd; /* 白灰背景 */
+                flex-direction: column; padding: 100px 40px;
+                transition: 0.4s; box-shadow: -10px 0 30px rgba(0,0,0,0.1); gap: 25px;
             }
             .nav-links.active { right: 0; }
-            .nav-links a { font-size: 1.1rem; color: var(--dark); border-bottom: 1px solid #eee; padding-bottom: 10px; }
+            .nav-links a { 
+                font-size: 1.15rem; color: #777; font-weight: 300; 
+                letter-spacing: 2px; border-bottom: 1px solid #eee; 
+                padding-bottom: 15px; width: 100%; 
+            }
+            .nav-links a:active { color: var(--gold); }
             .hero h1 { font-size: 2.2rem; }
             .proxy-grid { grid-template-columns: 1fr; }
             .modal-side, .modal-main { padding: 30px 20px; }
@@ -241,6 +244,7 @@
             <input type="text" placeholder="業主編號">
             <input type="password" placeholder="存取密碼">
             <button class="btn-login">進入看板</button>
+            <p style="font-size: 0.7rem; color: #999; margin-top: 15px;">實時影像與數位施工日誌僅供業主查閱</p>
         </div>
     </section>
 
@@ -248,13 +252,13 @@
         <div class="modal-body">
             <span class="close-btn" onclick="closeSpec()">&times;</span>
             <div class="modal-side">
-                <h2 style="color:var(--gold); margin-bottom: 30px;">核心防護指標</h2>
+                <h2 style="color:var(--gold); margin-bottom: 30px; font-weight: 300;">核心防護指標</h2>
                 <p style="color:#fff; margin-bottom: 20px;">1. 金庫級物理保全施工<br><small style="color:#666;">高強度複合鋼板與 5000psi 混凝土。</small></p>
                 <p style="color:#fff; margin-bottom: 20px;">2. 倒塌防傾毀結構<br><small style="color:#666;">獨立剛性骨架支撐。</small></p>
                 <p style="color:#fff;">3. 氣密與生存工程<br><small style="color:#666;">專業密封門鎖與多層隔熱。</small></p>
             </div>
             <div class="modal-main">
-                <h3 style="color:white; margin-bottom:25px;">系統維度機能說明</h3>
+                <h3 style="color:white; margin-bottom:25px; font-weight: 300;">系統維度機能說明</h3>
                 <div id="spec-list"></div>
             </div>
         </div>
@@ -271,14 +275,14 @@
     <script>
         const baseUrl = "https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/";
         
-        // 1. 建築風格
+        // 1. 建築風格初始化
         const styleWrap = document.getElementById('style-container');
         for(let i=1; i<=6; i++) {
             const fn = `0${i}.jpg`;
             styleWrap.innerHTML += `<div class="style-item reveal" onclick="openStyle('${fn}')"><img src="${baseUrl}${fn}"></div>`;
         }
 
-        // 2. 專案展示
+        // 2. 專案展示初始化
         const projects = [
             { id: 'A', count: 9 }, { id: 'B', count: 10 }, { id: 'C', count: 5 },
             { id: 'D', count: 10 }, { id: 'E', count: 4 }, { id: 'F', count: 5 }
@@ -307,10 +311,7 @@
             specWrap.innerHTML += `<div class="spec-row"><div class="spec-label">${s[0]}</div><div class="spec-val">${s[1]}</div></div>`;
         });
 
-        // --- 功能邏輯 ---
-        let swiperInstance = null;
-
-        // 手機選單控制
+        // --- 手機選單控制 ---
         const menuBtn = document.getElementById('mobile-menu');
         const navMenu = document.getElementById('nav-menu');
         menuBtn.addEventListener('click', () => {
@@ -325,6 +326,9 @@
                 menuBtn.querySelector('i').classList.remove('fa-xmark');
             });
         });
+
+        // --- 彈窗輪播邏輯 ---
+        let swiperInstance = null;
 
         function openProj(id, count) {
             const content = document.getElementById('swiper-content');
@@ -352,11 +356,16 @@
             swiperInstance = new Swiper('.swiper-container', { loop: false });
         }
 
-        function closeGallery() { document.getElementById('gallery').classList.remove('active'); document.body.style.overflow='auto'; }
+        function closeGallery() { 
+            document.getElementById('gallery').classList.remove('active'); 
+            document.body.style.overflow='auto'; 
+            if (swiperInstance) swiperInstance.destroy(true, true);
+        }
+
         function openSpec() { document.getElementById('spec-modal').classList.add('active'); document.body.style.overflow='hidden'; }
         function closeSpec() { document.getElementById('spec-modal').classList.remove('active'); document.body.style.overflow='auto'; }
 
-        // 進場動畫
+        // 進場動畫監聽
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
         }, { threshold: 0.1 });
