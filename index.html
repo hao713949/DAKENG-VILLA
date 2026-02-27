@@ -10,311 +10,341 @@
 
     <style>
         :root {
-            --dark: #1a1a1a;
-            --light: #ffffff;
-            --grey: #f8f8f8;
-            --accent: #8b5a2b;
-            --safety: #d4af37;
+            --dark: #121212;
+            --gold: #d4af37;
+            --grey: #f9f9f9;
+            --nav-grey: rgba(238, 238, 238, 0.9);
+            --border: rgba(212, 175, 55, 0.3);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang TC", "Noto Sans TC", sans-serif; }
-        html { scroll-behavior: smooth; }
-        body { background-color: var(--light); color: var(--dark); line-height: 1.7; overflow-x: hidden; }
-        body.no-scroll { overflow: hidden; }
-
-        /* --- 導覽列 --- */
-        nav { 
-            position: fixed; top: 0; width: 100%; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%); 
-            padding: 25px 5%; display: flex; justify-content: space-between; align-items: center; 
-            z-index: 1000; transition: 0.4s;
-        }
-        nav.scrolled { background: rgba(255, 255, 255, 0.98); padding: 15px 5%; box-shadow: 0 2px 20px rgba(0,0,0,0.05); }
-        .logo { font-weight: 300; letter-spacing: 2px; color: white; text-decoration: none; }
-        nav.scrolled .logo { color: var(--dark); }
-        .nav-links a { text-decoration: none; color: white; margin-left: 20px; font-size: 0.85rem; transition: 0.3s; }
-        nav.scrolled .nav-links a { color: var(--dark); }
-
-        /* --- Hero --- */
-        #home { height: 100vh; position: relative; display: flex; justify-content: center; align-items: center; color: white; text-align: center; }
-        .hero-bg { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/hero.jpg') center/cover;
-            animation: kenBurns 20s infinite alternate; z-index: -1;
-        }
-        @keyframes kenBurns { from { transform: scale(1); } to { transform: scale(1.1); } }
-
-        /* --- 通用佈局 --- */
-        section.content { padding: 100px 5%; max-width: 1400px; margin: 0 auto; }
-        .section-label { font-size: 0.7rem; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; margin-bottom: 20px; display: block; text-align: center; font-weight: 600; }
-        .section-title { font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 300; text-align: center; margin-bottom: 60px; }
-        .auto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-
-        /* --- 建築風格 --- */
-        .photo-grid-style { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .photo-item { aspect-ratio: 16/10; overflow: hidden; background: #eee; cursor: pointer; }
-        .photo-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 1s; }
-        .photo-item img.loaded { opacity: 1; }
-
-        /* --- 專案展示封面 --- */
-        .project-featured-cover { position: relative; aspect-ratio: 16/9; overflow: hidden; cursor: pointer; background: #eee; }
-        .project-featured-cover img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 1s; }
-        .project-featured-cover img.loaded { opacity: 1; }
-        .cover-overlay { position: absolute; bottom: 0; width: 100%; padding: 30px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; }
-
-        /* --- 隱形防禦 (安全屋) --- */
-        #safety-defense { background: #0c0c0c; color: white; }
-        .btn-gold { display: inline-block; padding: 15px 40px; border: 1px solid var(--safety); color: var(--safety); text-decoration: none; font-size: 0.85rem; cursor: pointer; background: transparent; transition: 0.3s; }
-        .btn-gold:hover { background: var(--safety); color: black; }
-
-        /* --- 彈窗系統 --- */
-        #spec-modal, #gallery-lightbox, #simple-lightbox { 
-            display:none; position:fixed; z-index:5000; top:0; left:0; width:100%; height:100%; 
-            background:rgba(0,0,0,0.98); justify-content:center; align-items:center; padding: 20px;
-        }
-        #spec-modal.open, #gallery-lightbox.open, #simple-lightbox.open { display:flex; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang TC", "Heiti TC", sans-serif; }
+        body { background: #fff; color: var(--dark); line-height: 1.6; overflow-x: hidden; }
         
-        /* 規格表詳細佈局 */
-        .spec-container { background: #161616; width: 100%; max-width: 900px; display: flex; flex-wrap: wrap; position: relative; border: 1px solid #333; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
-        .spec-side { flex: 1; padding: 40px; background: #000; border-right: 1px solid #222; }
-        .spec-main { flex: 1.8; padding: 40px; color: #ccc; }
-        .spec-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .spec-table th, .spec-table td { padding: 15px 12px; border-bottom: 1px solid #222; text-align: left; font-size: 0.85rem; }
-        .highlight { color: var(--safety); font-weight: 600; }
-        .close-btn { position: absolute; top: 20px; right: 25px; color: #777; font-size: 35px; cursor: pointer; z-index: 100; line-height: 1; }
-        .close-btn:hover { color: white; }
+        /* 動態進場動畫 */
+        .reveal { opacity: 0; transform: translateY(25px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* 輪播優化 */
-        .swiper-container { width: 100%; height: 100%; }
-        .swiper-slide { display: flex; align-items: center; justify-content: center; }
-        .swiper-slide img { max-height: 85vh; max-width: 90%; object-fit: contain; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
-
-        .card { padding: 40px; background: var(--grey); border-top: 2px solid transparent; transition: 0.4s; }
-        .card:hover { background: #f0f0f0; border-top: 2px solid var(--accent); transform: translateY(-5px); }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .photo-grid-style { grid-template-columns: 1fr; }
-            .spec-container { flex-direction: column; overflow-y: auto; max-height: 90vh; }
+        /* --- 1. 導覽模組 --- */
+        nav { 
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%; background: var(--nav-grey); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        footer { padding: 60px 20px; text-align: center; background: #000; color: #444; font-size: 0.75rem; letter-spacing: 2px; }
+        .logo { color: var(--dark); text-decoration: none; font-size: 1.1rem; letter-spacing: 2px; font-weight: 400; }
+        .nav-links { display: flex; gap: 18px; }
+        .nav-links a { color: rgba(0,0,0,0.6); text-decoration: none; font-size: 0.75rem; letter-spacing: 1px; transition: 0.3s; font-weight: 500; }
+        .nav-links a:hover { color: var(--gold); }
+
+        /* --- Hero Section --- */
+        .hero { 
+            height: 100vh; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/hero.jpg') center/cover no-repeat;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
+            padding: 0 20px;
+        }
+        .hero h1 { font-size: 3rem; font-weight: 300; letter-spacing: 8px; margin-bottom: 15px; }
+        .hero p { font-size: 1rem; letter-spacing: 3px; }
+
+        section.content { padding: 100px 5%; max-width: 1400px; margin: 0 auto; }
+        .section-label { font-size: 0.7rem; color: var(--gold); letter-spacing: 4px; display: block; text-align: center; margin-bottom: 10px; font-weight: bold; }
+        .section-title { font-size: 2rem; text-align: center; margin-bottom: 60px; font-weight: 300; letter-spacing: 4px; }
+
+        /* --- 2. 核心理念 --- */
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .concept-card { padding: 45px; background: var(--grey); border-top: 3px solid transparent; transition: 0.4s; }
+        .concept-card:hover { border-top-color: var(--gold); background: #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.05); }
+        .concept-card h3 { font-size: 1.25rem; margin-bottom: 20px; color: var(--dark); letter-spacing: 1px; }
+        .concept-card p { font-size: 0.95rem; color: #555; }
+
+        /* --- 3. 建築風格 --- */
+        .style-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .style-item { aspect-ratio: 4/3; overflow: hidden; cursor: zoom-in; position: relative; background: #eee; }
+        .style-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
+        .style-item:hover img { transform: scale(1.1); }
+
+        /* --- 4. 專案展示 --- */
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .project-card { position: relative; aspect-ratio: 16/9; overflow: hidden; cursor: pointer; background: #000; }
+        .project-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: 0.6s; }
+        .project-card:hover img { opacity: 0.85; transform: scale(1.05); }
+        .project-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); }
+        .project-overlay h3 { color: var(--gold); font-size: 1rem; letter-spacing: 3px; font-weight: 400; border: 1px solid var(--gold); padding: 10px 20px; }
+
+        /* --- 5. 山坡建築 --- */
+        .mountain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; text-align: center; }
+        .mountain-item i { font-size: 2.5rem; color: var(--gold); margin-bottom: 20px; opacity: 0.8; }
+        .mountain-item h3 { margin-bottom: 15px; letter-spacing: 1px; }
+
+        /* --- 6. 隱形防禦 --- */
+        #safety { background: #0a0a0a; color: white; padding: 100px 5%; }
+        .defense-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 60px; flex-wrap: wrap; }
+        .defense-text { flex: 1.2; min-width: 350px; }
+        .defense-visual { 
+            flex: 0.8; min-width: 300px; height: 350px; text-align: center;
+            border: 1px solid #333; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=1200') center/cover;
+        }
+        .btn-gold { 
+            padding: 15px 40px; border: 1px solid var(--gold); color: var(--gold); 
+            background: transparent; cursor: pointer; font-size: 0.85rem; letter-spacing: 2px; transition: 0.3s;
+        }
+        .btn-gold:hover { background: var(--gold); color: #000; }
+
+        /* --- 7. 專案代理 --- */
+        .proxy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px; }
+        .proxy-box { padding: 40px; border: 1px solid #eee; }
+        .proxy-box h3 { color: var(--gold); margin-bottom: 25px; font-weight: 300; border-left: 3px solid var(--gold); padding-left: 15px; }
+        .proxy-sub { margin-top: 20px; display: block; font-weight: bold; margin-bottom: 5px; }
+
+        /* --- 8. 工程進度 --- */
+        #progress { background: #f4f4f4; text-align: center; }
+        .progress-login { max-width: 400px; margin: 0 auto; background: #fff; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .progress-login input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; outline: none; font-size: 1rem; }
+        .btn-login { width: 100%; padding: 12px; background: var(--dark); color: #fff; border: none; cursor: pointer; letter-spacing: 2px; }
+
+        /* 規格彈窗 (Modal) */
+        .modal { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; padding: 20px; }
+        .modal.active { display: flex; }
+        .modal-body { background: #111; width: 100%; max-width: 1100px; display: flex; flex-wrap: wrap; border: 1px solid #333; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-side { flex: 1; padding: 50px; background: #050505; border-right: 1px solid #222; min-width: 300px; }
+        .modal-main { flex: 1.5; padding: 50px; min-width: 350px; }
+        .spec-row { display: flex; padding: 18px 0; border-bottom: 1px solid #222; }
+        .spec-label { width: 110px; color: var(--gold); font-weight: bold; font-size: 0.9rem; flex-shrink: 0; }
+        .spec-val { color: #999; font-size: 0.9rem; }
+
+        /* 輪播 Lightbox */
+        #gallery { display:none; position:fixed; inset:0; z-index:3000; background:#000; flex-direction: column; }
+        #gallery.active { display:flex; }
+        .swiper-container { width: 100%; height: 100%; }
+        .swiper-slide { display: flex; justify-content: center; align-items: center; }
+        .swiper-slide img { max-width: 90%; max-height: 85vh; object-fit: contain; }
+        .close-btn { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 35px; cursor: pointer; z-index: 3100; }
+
+        /* 手機版優化 */
+        @media (max-width: 800px) { 
+            .nav-links { display: none; } 
+            .hero h1 { font-size: 2.2rem; }
+            .proxy-grid { grid-template-columns: 1fr; } 
+            .modal-side, .modal-main { padding: 30px 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <nav id="main-nav">
-        <a href="#home" class="logo">森山聚 建築管理</a>
+    <nav>
+        <a href="#" class="logo">森山聚 建築管理顧問</a>
         <div class="nav-links">
-            <a href="#concept">核心理念</a>
-            <a href="#style">建築風格</a>
-            <a href="#projects">專案展示</a>
-            <a href="#mountain">山坡建築</a>
-            <a href="#safety-defense">隱形防禦</a>
-            <a href="#proxy-role">專案代理</a>
-            <a href="#login-section">工程進度</a>
+            <a href="#concept">核心理念</a><a href="#style">建築風格</a><a href="#projects">專案展示</a><a href="#mountain">山坡建築</a><a href="#safety">隱形防禦</a><a href="#proxy">專案代理</a><a href="#progress">工程進度</a>
         </div>
     </nav>
 
-    <section id="home">
-        <div class="hero-bg"></div>
-        <div class="hero-text-box">
-            <h1>森山聚 建築管理顧問</h1>
-            <p>工程整合承攬 ‧ 建築顧問管理 ‧ 地主的營建總代理</p>
-        </div>
-    </section>
+    <div class="hero">
+        <h1 class="reveal">森山聚 建築管理顧問</h1>
+        <p class="reveal">全案整合承攬 <span style="color:var(--gold);">|</span> 專業技術監督 <span style="color:var(--gold);">|</span> 地主的營建總代理</p>
+    </div>
 
     <section id="concept" class="content">
-        <span class="section-label">Core Strategy</span>
-        <h2 class="section-title">核心理念 - 整合與監管</h2>
-        <div class="auto-grid">
-            <div class="card"><h4>資源整合</h4><p>直接對接專業優質工班，將預算精準落實於建築品質與建材規格。</p></div>
-            <div class="card"><h4>合約承攬</h4><p>作為地主的單一對口，負全案最終責任，解決傳統分包的推諉弊端。</p></div>
-            <div class="card"><h4>專業監管</h4><p>專案技師全時駐點，嚴格簽核施工節點，確保設計圖說與工地完美對齊。</p></div>
+        <span class="section-label reveal">CORE VALUE</span>
+        <h2 class="section-title reveal">垂直整合實現地主利益最大化</h2>
+        <div class="concept-grid">
+            <div class="concept-card reveal">
+                <h3>資源整合</h3>
+                <p>直接對接專業優質工班，將預算精準落實於建築品質與建材規格。</p>
+            </div>
+            <div class="concept-card reveal">
+                <h3>合約承攬</h3>
+                <p>作為地主的單一對口，負全案最終責任，解決傳統分包的界面推諉。</p>
+            </div>
+            <div class="concept-card reveal">
+                <h3>專業監管</h3>
+                <p>專案技師實時駐點，嚴格簽核施工節點，確保設計圖說與工地完美落實。</p>
+            </div>
         </div>
     </section>
 
-    <section id="style" class="content" style="background: #fafafa;">
-        <span class="section-label">Aesthetic Style</span>
-        <h2 class="section-title">建築風格</h2>
-        <div class="photo-grid-style">
-            <div class="photo-item" onclick="openSimpleLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/01.jpg" onload="this.classList.add('loaded')"></div>
-            <div class="photo-item" onclick="openSimpleLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/02.jpg" onload="this.classList.add('loaded')"></div>
-            <div class="photo-item" onclick="openSimpleLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/03.jpg" onload="this.classList.add('loaded')"></div>
-            <div class="photo-item" onclick="openSimpleLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/04.jpg" onload="this.classList.add('loaded')"></div>
-            <div class="photo-item" onclick="openSimpleLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/05.jpg" onload="this.classList.add('loaded')"></div>
-            <div class="photo-item" onclick="openSimpleLightbox(this.querySelector('img').src)"><img src="https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/06.jpg" onload="this.classList.add('loaded')"></div>
-        </div>
+    <section id="style" class="content" style="background: #fcfcfc;">
+        <span class="section-label reveal">AESTHETIC</span>
+        <h2 class="section-title reveal">建築風格</h2>
+        <div class="style-grid" id="style-container"></div>
     </section>
 
     <section id="projects" class="content">
-        <span class="section-label">Portfolio</span>
-        <h2 class="section-title">專案展示</h2>
-        <div class="auto-grid" id="featured-container"></div>
+        <span class="section-label reveal">PORTFOLIO</span>
+        <h2 class="section-title reveal">專案展示</h2>
+        <div class="project-grid" id="project-container"></div>
     </section>
 
-    <section id="mountain" class="content" style="background: var(--grey);">
-        <span class="section-label">Engineering</span>
-        <h2 class="section-title">山坡地建築的工藝挑戰</h2>
-        <div class="auto-grid">
-            <div style="text-align:center; padding:30px;"><i class="fa-solid fa-mountain-sun" style="font-size:3rem; color:var(--accent); margin-bottom:20px;"></i><h4>高規格擋土工程</h4><p>排樁與地錨工程，確保基礎永不位移。</p></div>
-            <div style="text-align:center; padding:30px;"><i class="fa-solid fa-droplet-slash" style="font-size:3rem; color:var(--accent); margin-bottom:20px;"></i><h4>三維防潮系統</h4><p>複式牆與導水盲溝，解決坡地建築濕氣痛點。</p></div>
-            <div style="text-align:center; padding:30px;"><i class="fa-solid fa-wind" style="font-size:3rem; color:var(--accent); margin-bottom:20px;"></i><h4>微氣候設計</h4><p>熱浮力通風，讓地下室依然明亮乾燥。</p></div>
-        </div>
-    </section>
-
-    <section id="safety-defense" class="content">
-        <div style="display:flex; align-items:center; gap:50px; flex-wrap:wrap;">
-            <div style="flex:1; min-width:300px;">
-                <span class="section-label" style="text-align:left; color:var(--safety);">Invisible Protection</span>
-                <h2 style="font-weight:300; margin-bottom:25px; text-align:left;">全時域生命守護系統</h2>
-                <p style="opacity:0.8; margin-bottom:30px;">針對別墅地下空間（8-10 坪）量身打造，預算 250萬 - 450萬。在美學之下，隱藏軍規級防禦系統。</p>
-                <button class="btn-gold" onclick="openSpec()">瞭解技術規格詳情</button>
+    <section id="mountain" class="content" style="background: #f9f9f9;">
+        <span class="section-label reveal">HILLSIDE TECHNOLOGY</span>
+        <h2 class="section-title reveal">山坡地建築的工藝挑戰</h2>
+        <div class="mountain-grid">
+            <div class="mountain-item reveal">
+                <i class="fa-solid fa-mountain"></i>
+                <h3>高規格擋土工程</h3>
+                <p>排樁與地錨工程，確保基礎永不位移。</p>
             </div>
-            <div style="flex:1; text-align:center; min-width:300px;">
-                <i class="fa-solid fa-shield-halved" style="font-size:10rem; color:var(--safety); opacity:0.15;"></i>
+            <div class="mountain-item reveal">
+                <i class="fa-solid fa-droplet-slash"></i>
+                <h3>三維防潮系統</h3>
+                <p>複式牆與導水盲溝，解決坡地建築濕氣痛點。</p>
+            </div>
+            <div class="mountain-item reveal">
+                <i class="fa-solid fa-wind"></i>
+                <h3>微氣候設計</h3>
+                <p>熱浮力通風，讓地下室依然明亮乾燥。</p>
             </div>
         </div>
     </section>
 
-    <section id="proxy-role" class="content">
-        <span class="section-label">Agent & Management</span>
-        <h2 class="section-title">專案代理 - 地主的營建總代理</h2>
-        <div class="auto-grid">
-            <div class="card" style="border-left: 4px solid var(--accent); background: #fff;">
-                <h3 style="margin-bottom: 25px; color: var(--accent); font-weight: 500;">營建統包商角色定位</h3>
-                <h4 style="margin-bottom: 8px;">單一合約責任</h4>
-                <p style="color: #666; font-size: 0.95rem; margin-bottom: 20px;">作為唯一合約對口，解決工程界面不清問題。</p>
-                <h4 style="margin-bottom: 8px;">專業技師駐點</h4>
-                <p style="color: #666; font-size: 0.95rem;">專職技師簽核工地節點，確保公釐級施工精度。</p>
+    <section id="safety">
+        <div class="defense-container">
+            <div class="defense-text reveal">
+                <h2 style="font-size: 2.2rem; margin-bottom: 25px; font-weight: 300;">金庫級結構 ‧ 獨立維生避難空間</h2>
+                <p style="color: #888; margin-bottom: 40px;">將金庫級保全植入別墅核心，具備強化的防盜、防搶、防傾毀功能，並整合水電通訊自給自足獨立維生系統。</p>
+                <button class="btn-gold" onclick="openSpec()">瞭解客製技術規格</button>
             </div>
-            <div class="card" style="border-left: 4px solid var(--dark); background: #fff;">
-                <h3 style="margin-bottom: 25px; color: var(--dark); font-weight: 500;">實際負責內容</h3>
-                <h4 style="margin-bottom: 8px;">技術界面整合</h4>
-                <p style="color: #666; font-size: 0.95rem; margin-bottom: 20px;">協調水電、機電與土建孔位，減少二次敲除造成的結構損傷。</p>
-                <h4 style="margin-bottom: 8px;">數位化進度回報</h4>
-                <p style="color: #666; font-size: 0.95rem;">雲端看板管理施工日誌，實現「工地在手機」的透明掌控。</p>
+            <div class="defense-visual reveal">
+                <i class="fa-solid fa-shield-halved" style="font-size: 80px; color: var(--gold); opacity: 0.5;"></i>
             </div>
         </div>
     </section>
 
-    <section id="login-section" class="content" style="background: var(--grey);">
-        <div style="max-width: 400px; margin: 0 auto; text-align: center;">
-            <span class="section-label">Owner Portal</span>
-            <h2 style="font-weight: 300; margin-bottom: 30px;">工程進度看板</h2>
-            <input type="text" placeholder="業主代號" style="width:100%; padding:15px; margin-bottom:10px; border:1px solid #ddd; outline:none; background:white;">
-            <input type="password" placeholder="密碼" style="width:100%; padding:15px; margin-bottom:20px; border:1px solid #ddd; outline:none; background:white;">
-            <button style="width:100%; padding:15px; background:var(--dark); color:white; border:none; cursor:pointer; letter-spacing:2px;">進入看板</button>
+    <section id="proxy" class="content">
+        <span class="section-label reveal">PROXY SERVICE</span>
+        <h2 class="section-title reveal">專案代理 - 地主的營建總代理</h2>
+        <div class="proxy-grid">
+            <div class="proxy-box reveal">
+                <h3>營建統包商角色定位</h3>
+                <p><span class="proxy-sub">單一合約責任</span> 解決多方分包導致的介面模糊與責任推諉。</p>
+                <p><span class="proxy-sub">專業技師駐點</span> 專職技師簽核施工節點，確保公釐級施工精度。</p>
+            </div>
+            <div class="proxy-box reveal">
+                <h3>實際負責內容</h3>
+                <p><span class="proxy-sub">技術介面精準整合</span> 協調土建與機電介面，落實「先套圖、後施工」，實現零敲除、零修改的工藝品質。</p>
+                <p><span class="proxy-sub">數位化進度回報</span> 雲端看板管理施工日誌，實現「工地在手機」的透明化。</p>
+            </div>
         </div>
     </section>
 
-    <footer>© 2026 森山聚建築管理顧問. <br>專業技師簽核 ‧ 工程界面整合 ‧ 100% 透明化管理</footer>
+    <section id="progress" class="content">
+        <span class="section-label reveal">LIVE PROGRESS</span>
+        <h2 class="section-title reveal">工程進度看板</h2>
+        <div class="progress-login reveal">
+            <h4 style="margin-bottom: 20px; font-weight: 300;">業主專屬登入</h4>
+            <input type="text" placeholder="業主編號">
+            <input type="password" placeholder="存取密碼">
+            <button class="btn-login">進入看板</button>
+            <p style="font-size: 0.7rem; color: #999; margin-top: 15px;">實時影像與數位施工日誌僅供業主查閱</p>
+        </div>
+    </section>
 
-    <div id="spec-modal">
-        <div class="spec-container">
+    <div id="spec-modal" class="modal">
+        <div class="modal-body">
             <span class="close-btn" onclick="closeSpec()">&times;</span>
-            <div class="spec-side">
-                <h3 style="color:var(--safety); font-weight:300; margin-bottom:30px;">技術認證標竿</h3>
-                <p style="font-size:0.85rem; color:#888; margin-bottom:10px;"><i class="fa-solid fa-check"></i> UL 752 抗彈認證</p>
-                <p style="font-size:0.85rem; color:#888; margin-bottom:10px;"><i class="fa-solid fa-check"></i> NBC 核生化防護系統</p>
-                <p style="font-size:0.85rem; color:#888; margin-bottom:10px;"><i class="fa-solid fa-check"></i> MIL-STD 電磁脈衝屏蔽</p>
+            <div class="modal-side">
+                <h2 style="color:var(--gold); font-weight: 300; margin-bottom: 30px;">核心防護指標</h2>
+                <p style="color:#fff; margin-bottom: 20px;">1. 金庫級物理保全施工<br><small style="color:#666;">採用高強度複合鋼板與 5000psi 混凝土灌漿。</small></p>
+                <p style="color:#fff; margin-bottom: 20px;">2. 倒塌防傾毀結構<br><small style="color:#666;">獨立剛性骨架支撐，確保建物受損時空間不變形。</small></p>
+                <p style="color:#fff;">3. 氣密與生存工程<br><small style="color:#666;">專業密封門鎖與多層隔熱，確保內部生存穩定。</small></p>
             </div>
-            <div class="spec-main">
-                <h4 style="color:white; font-weight:300; margin-bottom:20px;">8-10 坪專案規格對照</h4>
-                <table class="spec-table">
-                    <thead><tr><th>指標</th><th>高階 Pro</th><th class="highlight">旗艦 Ultimate</th></tr></thead>
-                    <tbody>
-                        <tr><td>物理結構</td><td>6mm 複合鋼板</td><td class="highlight">10mm 鋼板 + 5000psi RC</td></tr>
-                        <tr><td>防彈等級</td><td>Level 5</td><td class="highlight">Level 8 (抗狙擊步槍)</td></tr>
-                        <tr><td>維生系統</td><td>HEPA 正壓</td><td class="highlight">NBC 正壓系統 (12Pa)</td></tr>
-                        <tr><td>屏蔽防護</td><td>訊號強化</td><td class="highlight">EMP 電磁脈衝屏蔽</td></tr>
-                    </tbody>
-                </table>
-                <p style="font-size:0.75rem; color:#666; margin-top:25px;">* 預算區間 250 ~ 450 萬 (視環境地質調整)</p>
+            <div class="modal-main">
+                <h3 style="color:white; margin-bottom:25px; font-weight:300;">系統維度機能說明</h3>
+                <div id="spec-list"></div>
             </div>
         </div>
     </div>
 
-    <div id="gallery-lightbox">
-        <span class="close-btn" onclick="closeGallery()" style="color:white; z-index:5100;">&times;</span>
+    <div id="gallery">
+        <span class="close-btn" onclick="closeGallery()">&times;</span>
         <div class="swiper-container">
-            <div class="swiper-wrapper" id="swiper-wrapper-content"></div>
-            <div class="swiper-button-next" style="color:var(--safety)"></div>
-            <div class="swiper-button-prev" style="color:var(--safety)"></div>
+            <div class="swiper-wrapper" id="swiper-content"></div>
         </div>
-    </div>
-
-    <div id="simple-lightbox" onclick="closeSimpleLightbox()">
-        <img id="simple-img" src="" style="max-height:85vh; max-width:90%;">
     </div>
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
-        // 導覽列滾動特效
-        window.onscroll = function() {
-            const nav = document.getElementById('main-nav');
-            if (window.pageYOffset > 50) nav.classList.add('scrolled');
-            else nav.classList.remove('scrolled');
-        };
-
         const baseUrl = "https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/";
-        const seriesConfig = [
-            { id: 'A', name: '專案展示 A 案', count: 9 },
-            { id: 'B', name: '專案展示 B 案', count: 10 },
-            { id: 'C', name: '專案展示 C 案', count: 5 },
-            { id: 'D', name: '專案展示 D 案', count: 10 },
-            { id: 'E', name: '專案展示 E 案', count: 4 },
-            { id: 'F', name: '專案展示 F 案', count: 5 }
-        ];
+        
+        // 1. 初始化建築風格 (01-06)
+        const styleWrap = document.getElementById('style-container');
+        for(let i=1; i<=6; i++) {
+            const fn = `0${i}.jpg`;
+            styleWrap.innerHTML += `<div class="style-item reveal" onclick="openStyle('${fn}')"><img src="${baseUrl}${fn}"></div>`;
+        }
 
-        // 動態生成專案封面
-        const container = document.getElementById('featured-container');
-        seriesConfig.forEach(s => {
-            container.innerHTML += `
-                <div class="project-featured-cover" onclick="openGallery('${s.id}')">
-                    <img src="${baseUrl}${s.id}-01.jpg" onload="this.classList.add('loaded')">
-                    <div class="cover-overlay"><h4>${s.name}</h4><p style="font-size:0.7rem;">VIEW PROJECT</p></div>
-                </div>`;
+        // 2. 初始化專案 (A-F)
+        const projects = [
+            { id: 'A', count: 9 }, { id: 'B', count: 10 }, { id: 'C', count: 5 },
+            { id: 'D', count: 10 }, { id: 'E', count: 4 }, { id: 'F', count: 5 }
+        ];
+        const projWrap = document.getElementById('project-container');
+        projects.forEach(p => {
+            projWrap.innerHTML += `
+            <div class="project-card reveal" onclick="openProj('${p.id}', ${p.count})">
+                <img src="${baseUrl}${p.id}-01.jpg">
+                <div class="project-overlay"><h3>VIEW PROJECT ${p.id}</h3></div>
+            </div>`;
         });
 
-        // 彈窗控制邏輯
-        function openSpec() { document.getElementById('spec-modal').classList.add('open'); document.body.classList.add('no-scroll'); }
-        function closeSpec() { document.getElementById('spec-modal').classList.remove('open'); document.body.classList.remove('no-scroll'); }
-        function openSimpleLightbox(src) { document.getElementById('simple-img').src = src; document.getElementById('simple-lightbox').classList.add('open'); document.body.classList.add('no-scroll'); }
-        function closeSimpleLightbox() { document.getElementById('simple-lightbox').classList.remove('open'); document.body.classList.remove('no-scroll'); }
+        // 3. 隱形防禦規格
+        const specs = [
+            ["結構強度", "金庫級複合鋼板牆，抗切割與防倒塌。"],
+            ["獨立電力", "ESS 儲能鋰電系統、不斷電 UPS 備援。"],
+            ["獨立水源", "食品級不銹鋼水箱、奈米過濾系統。"],
+            ["空氣通訊", "醫療級正壓防護系統，配置 H13 高效過濾。"],
+            ["機能空間", "依需求規劃資產金庫、人員避難。"],
+            ["能源擴充", "預留緊急接口（可接入瓦斯或氧氣）。"],
+            ["客製面積", "依地主規模，100% 客製化規劃施工。"]
+        ];
+        const specWrap = document.getElementById('spec-list');
+        specs.forEach(s => {
+            specWrap.innerHTML += `<div class="spec-row"><div class="spec-label">${s[0]}</div><div class="spec-val">${s[1]}</div></div>`;
+        });
 
-        let swiperInstance;
-        function openGallery(id) {
-            const wrapper = document.getElementById('swiper-wrapper-content');
-            const config = seriesConfig.find(s => s.id === id);
-            wrapper.innerHTML = ''; // 清空內容
-            
-            // 批量生成幻燈片
-            for(let i=1; i<=config.count; i++) {
-                let num = i < 10 ? `0${i}` : i;
-                wrapper.innerHTML += `<div class="swiper-slide"><img src="${baseUrl}${id}-${num}.jpg"></div>`;
+        let swiperInstance = null;
+
+        function openProj(id, count) {
+            const content = document.getElementById('swiper-content');
+            let html = '';
+            for(let i=1; i<=count; i++) {
+                const n = i < 10 ? '0'+i : i;
+                html += `<div class="swiper-slide"><img src="${baseUrl}${id}-${n}.jpg"></div>`;
             }
-            
-            document.getElementById('gallery-lightbox').classList.add('open');
-            document.body.classList.add('no-scroll');
+            content.innerHTML = html;
+            document.getElementById('gallery').classList.add('active');
+            document.body.style.overflow = 'hidden';
 
-            // 銷毀舊實例並重建，防止緩存卡頓
-            if (swiperInstance) swiperInstance.destroy(true, true);
-            
             setTimeout(() => {
+                if (swiperInstance) swiperInstance.destroy(true, true);
                 swiperInstance = new Swiper('.swiper-container', {
-                    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-                    keyboard: true,
-                    observer: true,
-                    observeParents: true,
-                    threshold: 5
+                    initialSlide: 0, observer: true, observeParents: true,
+                    loop: count > 1, grabCursor: true, keyboard: { enabled: true }
                 });
             }, 100);
         }
 
-        function closeGallery() { 
-            document.getElementById('gallery-lightbox').classList.remove('open'); 
-            document.body.classList.remove('no-scroll');
+        function openStyle(fn) {
+            document.getElementById('swiper-content').innerHTML = `<div class="swiper-slide"><img src="${baseUrl}${fn}"></div>`;
+            document.getElementById('gallery').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            if (swiperInstance) swiperInstance.destroy(true, true);
+            swiperInstance = new Swiper('.swiper-container', { loop: false });
         }
+
+        function closeGallery() { 
+            document.getElementById('gallery').classList.remove('active'); 
+            document.body.style.overflow='auto'; 
+            if (swiperInstance) swiperInstance.destroy(true, true);
+        }
+
+        function openSpec() { document.getElementById('spec-modal').classList.add('active'); document.body.style.overflow='hidden'; }
+        function closeSpec() { document.getElementById('spec-modal').classList.remove('active'); document.body.style.overflow='auto'; }
+
+        // 動態進場監聽
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
