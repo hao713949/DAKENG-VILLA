@@ -13,14 +13,13 @@
             --dark: #121212;
             --gold: #d4af37;
             --grey: #f9f9f9;
-            --nav-grey: rgba(238, 238, 238, 0.9);
+            --nav-grey: rgba(238, 238, 238, 0.95);
             --border: rgba(212, 175, 55, 0.3);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang TC", "Heiti TC", sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang TC", "Heiti TC", sans-serif; scroll-behavior: smooth; }
         body { background: #fff; color: var(--dark); line-height: 1.6; overflow-x: hidden; }
         
-        /* 動態進場動畫 */
         .reveal { opacity: 0; transform: translateY(25px); transition: all 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
@@ -28,19 +27,22 @@
         nav { 
             position: fixed; top: 0; width: 100%; z-index: 1000;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 5%; background: var(--nav-grey); backdrop-filter: blur(10px);
+            padding: 15px 5%; background: var(--nav-grey); backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .logo { color: var(--dark); text-decoration: none; font-size: 1.1rem; letter-spacing: 2px; font-weight: 400; }
-        .nav-links { display: flex; gap: 18px; }
-        .nav-links a { color: rgba(0,0,0,0.6); text-decoration: none; font-size: 0.75rem; letter-spacing: 1px; transition: 0.3s; font-weight: 500; }
+        .logo { color: var(--dark); text-decoration: none; font-size: 1.1rem; letter-spacing: 2px; font-weight: 400; z-index: 1002; }
+        
+        /* 漢堡按鈕 */
+        .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); z-index: 1002; }
+
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: rgba(0,0,0,0.6); text-decoration: none; font-size: 0.8rem; letter-spacing: 1px; transition: 0.3s; font-weight: 500; }
         .nav-links a:hover { color: var(--gold); }
 
         /* --- Hero Section --- */
         .hero { 
             height: 100vh; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/hero.jpg') center/cover no-repeat;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
-            padding: 0 20px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 0 20px;
         }
         .hero h1 { font-size: 3rem; font-weight: 300; letter-spacing: 8px; margin-bottom: 15px; }
         .hero p { font-size: 1rem; letter-spacing: 3px; }
@@ -54,11 +56,10 @@
         .concept-card { padding: 45px; background: var(--grey); border-top: 3px solid transparent; transition: 0.4s; }
         .concept-card:hover { border-top-color: var(--gold); background: #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.05); }
         .concept-card h3 { font-size: 1.25rem; margin-bottom: 20px; color: var(--dark); letter-spacing: 1px; }
-        .concept-card p { font-size: 0.95rem; color: #555; }
 
         /* --- 3. 建築風格 --- */
         .style-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
-        .style-item { aspect-ratio: 4/3; overflow: hidden; cursor: zoom-in; position: relative; background: #eee; }
+        .style-item { aspect-ratio: 4/3; overflow: hidden; cursor: zoom-in; background: #eee; }
         .style-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
         .style-item:hover img { transform: scale(1.1); }
 
@@ -67,48 +68,40 @@
         .project-card { position: relative; aspect-ratio: 16/9; overflow: hidden; cursor: pointer; background: #000; }
         .project-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: 0.6s; }
         .project-card:hover img { opacity: 0.85; transform: scale(1.05); }
-        .project-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); }
-        .project-overlay h3 { color: var(--gold); font-size: 1rem; letter-spacing: 3px; font-weight: 400; border: 1px solid var(--gold); padding: 10px 20px; }
+        .project-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+        .project-overlay h3 { color: var(--gold); font-size: 1rem; letter-spacing: 3px; border: 1px solid var(--gold); padding: 10px 20px; }
 
         /* --- 5. 山坡建築 --- */
         .mountain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; text-align: center; }
-        .mountain-item i { font-size: 2.5rem; color: var(--gold); margin-bottom: 20px; opacity: 0.8; }
-        .mountain-item h3 { margin-bottom: 15px; letter-spacing: 1px; }
+        .mountain-item i { font-size: 2.5rem; color: var(--gold); margin-bottom: 20px; }
 
         /* --- 6. 隱形防禦 --- */
         #safety { background: #0a0a0a; color: white; padding: 100px 5%; }
         .defense-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 60px; flex-wrap: wrap; }
         .defense-text { flex: 1.2; min-width: 350px; }
-        .defense-visual { 
-            flex: 0.8; min-width: 300px; height: 350px; text-align: center;
-            border: 1px solid #333; display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=1200') center/cover;
-        }
-        .btn-gold { 
-            padding: 15px 40px; border: 1px solid var(--gold); color: var(--gold); 
-            background: transparent; cursor: pointer; font-size: 0.85rem; letter-spacing: 2px; transition: 0.3s;
-        }
+        .defense-visual { flex: 0.8; min-width: 300px; height: 350px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; background: url('https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=1200') center/cover; }
+        .btn-gold { padding: 15px 40px; border: 1px solid var(--gold); color: var(--gold); background: transparent; cursor: pointer; letter-spacing: 2px; transition: 0.3s; }
         .btn-gold:hover { background: var(--gold); color: #000; }
 
         /* --- 7. 專案代理 --- */
         .proxy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px; }
         .proxy-box { padding: 40px; border: 1px solid #eee; }
-        .proxy-box h3 { color: var(--gold); margin-bottom: 25px; font-weight: 300; border-left: 3px solid var(--gold); padding-left: 15px; }
-        .proxy-sub { margin-top: 20px; display: block; font-weight: bold; margin-bottom: 5px; }
+        .proxy-box h3 { color: var(--gold); margin-bottom: 20px; border-left: 3px solid var(--gold); padding-left: 15px; }
+        .proxy-sub { margin-top: 15px; display: block; font-weight: bold; color: var(--gold); }
 
         /* --- 8. 工程進度 --- */
         #progress { background: #f4f4f4; text-align: center; }
         .progress-login { max-width: 400px; margin: 0 auto; background: #fff; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .progress-login input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; outline: none; font-size: 1rem; }
+        .progress-login input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; outline: none; }
         .btn-login { width: 100%; padding: 12px; background: var(--dark); color: #fff; border: none; cursor: pointer; letter-spacing: 2px; }
 
-        /* 規格彈窗 (Modal) */
+        /* 彈窗樣式 */
         .modal { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; padding: 20px; }
         .modal.active { display: flex; }
-        .modal-body { background: #111; width: 100%; max-width: 1100px; display: flex; flex-wrap: wrap; border: 1px solid #333; position: relative; max-height: 90vh; overflow-y: auto; }
-        .modal-side { flex: 1; padding: 50px; background: #050505; border-right: 1px solid #222; min-width: 300px; }
+        .modal-body { background: #111; width: 100%; max-width: 1100px; display: flex; flex-wrap: wrap; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-side { flex: 1; padding: 50px; background: #050505; min-width: 300px; }
         .modal-main { flex: 1.5; padding: 50px; min-width: 350px; }
-        .spec-row { display: flex; padding: 18px 0; border-bottom: 1px solid #222; }
+        .spec-row { display: flex; padding: 15px 0; border-bottom: 1px solid #222; }
         .spec-label { width: 110px; color: var(--gold); font-weight: bold; font-size: 0.9rem; flex-shrink: 0; }
         .spec-val { color: #999; font-size: 0.9rem; }
 
@@ -118,13 +111,20 @@
         .swiper-container { width: 100%; height: 100%; }
         .swiper-slide { display: flex; justify-content: center; align-items: center; }
         .swiper-slide img { max-width: 90%; max-height: 85vh; object-fit: contain; }
-        .close-btn { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 35px; cursor: pointer; z-index: 3100; }
+        .close-btn { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 35px; cursor: pointer; z-index: 3100; }
 
-        /* 手機版優化 */
-        @media (max-width: 800px) { 
-            .nav-links { display: none; } 
+        /* 行動端優化 */
+        @media (max-width: 800px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 75%; height: 100vh;
+                background: #fff; flex-direction: column; padding: 100px 40px;
+                transition: 0.4s; box-shadow: -10px 0 30px rgba(0,0,0,0.2); gap: 30px;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links a { font-size: 1.1rem; color: var(--dark); border-bottom: 1px solid #eee; padding-bottom: 10px; }
             .hero h1 { font-size: 2.2rem; }
-            .proxy-grid { grid-template-columns: 1fr; } 
+            .proxy-grid { grid-template-columns: 1fr; }
             .modal-side, .modal-main { padding: 30px 20px; }
         }
     </style>
@@ -133,8 +133,15 @@
 
     <nav>
         <a href="#" class="logo">森山聚 建築管理顧問</a>
-        <div class="nav-links">
-            <a href="#concept">核心理念</a><a href="#style">建築風格</a><a href="#projects">專案展示</a><a href="#mountain">山坡建築</a><a href="#safety">隱形防禦</a><a href="#proxy">專案代理</a><a href="#progress">工程進度</a>
+        <div class="menu-toggle" id="mobile-menu"><i class="fa-solid fa-bars"></i></div>
+        <div class="nav-links" id="nav-menu">
+            <a href="#concept">核心理念</a>
+            <a href="#style">建築風格</a>
+            <a href="#projects">專案展示</a>
+            <a href="#mountain">山坡建築</a>
+            <a href="#safety">隱形防禦</a>
+            <a href="#proxy">專案代理</a>
+            <a href="#progress">工程進度</a>
         </div>
     </nav>
 
@@ -153,7 +160,7 @@
             </div>
             <div class="concept-card reveal">
                 <h3>合約承攬</h3>
-                <p>作為地主的單一對口，負全案最終責任，解決傳統分包的界面推諉。</p>
+                <p>作為地主的單一對口，負全案最終責任，解決傳統分包的界面推責。</p>
             </div>
             <div class="concept-card reveal">
                 <h3>專業監管</h3>
@@ -200,7 +207,7 @@
         <div class="defense-container">
             <div class="defense-text reveal">
                 <h2 style="font-size: 2.2rem; margin-bottom: 25px; font-weight: 300;">金庫級結構 ‧ 獨立維生避難空間</h2>
-                <p style="color: #888; margin-bottom: 40px;">將金庫級保全植入別墅核心，具備強化的防盜、防搶、防傾毀功能，並整合水電通訊自給自足獨立維生系統。</p>
+                <p style="color: #888; margin-bottom: 40px;">具備強化的防盜、防搶、防傾毀功能，整合水電通訊自給自足獨立維生系統。</p>
                 <button class="btn-gold" onclick="openSpec()">瞭解客製技術規格</button>
             </div>
             <div class="defense-visual reveal">
@@ -220,7 +227,7 @@
             </div>
             <div class="proxy-box reveal">
                 <h3>實際負責內容</h3>
-                <p><span class="proxy-sub">技術介面精準整合</span> 協調土建與機電介面，落實「先套圖、後施工」，實現零敲除、零修改的工藝品質。</p>
+                <p><span class="proxy-sub">技術介面精準整合</span> 協調土建與機電介面，落實「先套圖、後施工」。</p>
                 <p><span class="proxy-sub">數位化進度回報</span> 雲端看板管理施工日誌，實現「工地在手機」的透明化。</p>
             </div>
         </div>
@@ -234,7 +241,6 @@
             <input type="text" placeholder="業主編號">
             <input type="password" placeholder="存取密碼">
             <button class="btn-login">進入看板</button>
-            <p style="font-size: 0.7rem; color: #999; margin-top: 15px;">實時影像與數位施工日誌僅供業主查閱</p>
         </div>
     </section>
 
@@ -242,13 +248,13 @@
         <div class="modal-body">
             <span class="close-btn" onclick="closeSpec()">&times;</span>
             <div class="modal-side">
-                <h2 style="color:var(--gold); font-weight: 300; margin-bottom: 30px;">核心防護指標</h2>
-                <p style="color:#fff; margin-bottom: 20px;">1. 金庫級物理保全施工<br><small style="color:#666;">採用高強度複合鋼板與 5000psi 混凝土灌漿。</small></p>
-                <p style="color:#fff; margin-bottom: 20px;">2. 倒塌防傾毀結構<br><small style="color:#666;">獨立剛性骨架支撐，確保建物受損時空間不變形。</small></p>
-                <p style="color:#fff;">3. 氣密與生存工程<br><small style="color:#666;">專業密封門鎖與多層隔熱，確保內部生存穩定。</small></p>
+                <h2 style="color:var(--gold); margin-bottom: 30px;">核心防護指標</h2>
+                <p style="color:#fff; margin-bottom: 20px;">1. 金庫級物理保全施工<br><small style="color:#666;">高強度複合鋼板與 5000psi 混凝土。</small></p>
+                <p style="color:#fff; margin-bottom: 20px;">2. 倒塌防傾毀結構<br><small style="color:#666;">獨立剛性骨架支撐。</small></p>
+                <p style="color:#fff;">3. 氣密與生存工程<br><small style="color:#666;">專業密封門鎖與多層隔熱。</small></p>
             </div>
             <div class="modal-main">
-                <h3 style="color:white; margin-bottom:25px; font-weight:300;">系統維度機能說明</h3>
+                <h3 style="color:white; margin-bottom:25px;">系統維度機能說明</h3>
                 <div id="spec-list"></div>
             </div>
         </div>
@@ -265,14 +271,14 @@
     <script>
         const baseUrl = "https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/";
         
-        // 1. 初始化建築風格 (01-06)
+        // 1. 建築風格
         const styleWrap = document.getElementById('style-container');
         for(let i=1; i<=6; i++) {
             const fn = `0${i}.jpg`;
             styleWrap.innerHTML += `<div class="style-item reveal" onclick="openStyle('${fn}')"><img src="${baseUrl}${fn}"></div>`;
         }
 
-        // 2. 初始化專案 (A-F)
+        // 2. 專案展示
         const projects = [
             { id: 'A', count: 9 }, { id: 'B', count: 10 }, { id: 'C', count: 5 },
             { id: 'D', count: 10 }, { id: 'E', count: 4 }, { id: 'F', count: 5 }
@@ -286,7 +292,7 @@
             </div>`;
         });
 
-        // 3. 隱形防禦規格
+        // 3. 規格數據
         const specs = [
             ["結構強度", "金庫級複合鋼板牆，抗切割與防倒塌。"],
             ["獨立電力", "ESS 儲能鋰電系統、不斷電 UPS 備援。"],
@@ -301,7 +307,24 @@
             specWrap.innerHTML += `<div class="spec-row"><div class="spec-label">${s[0]}</div><div class="spec-val">${s[1]}</div></div>`;
         });
 
+        // --- 功能邏輯 ---
         let swiperInstance = null;
+
+        // 手機選單控制
+        const menuBtn = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
+        menuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            menuBtn.querySelector('i').classList.toggle('fa-bars');
+            menuBtn.querySelector('i').classList.toggle('fa-xmark');
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                menuBtn.querySelector('i').classList.add('fa-bars');
+                menuBtn.querySelector('i').classList.remove('fa-xmark');
+            });
+        });
 
         function openProj(id, count) {
             const content = document.getElementById('swiper-content');
@@ -313,12 +336,10 @@
             content.innerHTML = html;
             document.getElementById('gallery').classList.add('active');
             document.body.style.overflow = 'hidden';
-
             setTimeout(() => {
                 if (swiperInstance) swiperInstance.destroy(true, true);
                 swiperInstance = new Swiper('.swiper-container', {
-                    initialSlide: 0, observer: true, observeParents: true,
-                    loop: count > 1, grabCursor: true, keyboard: { enabled: true }
+                    observer: true, observeParents: true, loop: count > 1, grabCursor: true, keyboard: true
                 });
             }, 100);
         }
@@ -331,16 +352,11 @@
             swiperInstance = new Swiper('.swiper-container', { loop: false });
         }
 
-        function closeGallery() { 
-            document.getElementById('gallery').classList.remove('active'); 
-            document.body.style.overflow='auto'; 
-            if (swiperInstance) swiperInstance.destroy(true, true);
-        }
-
+        function closeGallery() { document.getElementById('gallery').classList.remove('active'); document.body.style.overflow='auto'; }
         function openSpec() { document.getElementById('spec-modal').classList.add('active'); document.body.style.overflow='hidden'; }
         function closeSpec() { document.getElementById('spec-modal').classList.remove('active'); document.body.style.overflow='auto'; }
 
-        // 動態進場監聽
+        // 進場動畫
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
         }, { threshold: 0.1 });
