@@ -1,1 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <style>
+        /* 額外增加：優化輸入框外觀 */
+        .auth-overlay input#id-input {
+            margin-bottom: 5px;
+            text-transform: uppercase; /* 自動轉大寫 */
+        }
+        #error { font-weight: bold; background: #fff5f5; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav"><span class="serif">大貴段森林莊園 ‧ 認購單元系統</span></nav>
 
+    <div id="auth-box" class="auth-overlay">
+        <h3 class="serif">認購人專屬查詢</h3>
+        <p style="font-size: 0.85rem; color: #888; margin-bottom: 20px;">請輸入認購編號與授權密碼</p>
+        
+        <input type="text" id="id-input" placeholder="請輸入編號 (例如: C1)" autofocus>
+        <input type="password" id="pass-input" placeholder="請輸入授權密碼">
+        
+        <button class="auth-btn" onclick="validate()">驗證身分並開啟資料</button>
+        <p id="error" style="color: #c0392b; display: none; margin-top: 15px;">驗證失敗：編號或密碼錯誤</p>
+    </div>
+
+    <main id="protected-content">
+        <div class="section-header">
+            <h2 id="display-id" class="serif"></h2>
+            <p id="display-title" style="color: var(--gold-accent); font-weight: 700;"></p>
+        </div>
+
+        <div class="data-summary">
+            <div class="data-card"><p class="data-label">認購總價</p><p class="data-val"><span id="val-price"></span><span style="font-size: 1rem;">萬</span></p></div>
+            <div class="data-card"><p class="data-label">認購單價</p><p class="data-val"><span id="val-unitPrice"></span><span style="font-size: 1rem;">萬/坪</span></p></div>
+            <div class="data-card"><p class="data-label">總面積規模</p><p class="data-val"><span id="val-totalArea"></span><span style="font-size: 1rem;">坪</span></p></div>
+        </div>
+
+        <div class="photo-stack">
+            <div class="photo-item"><p class="photo-caption">全區單元配置圖</p><img src="48Unit-Map.jpg" onclick="openLightbox(this.src)"></div>
+            <div class="photo-item"><p class="photo-caption">單元原地貌 3D 空拍</p><img id="display-img-3d" src="" onclick="openLightbox(this.src)"></div>
+        </div>
+
+        <div class="table-wrap">
+            <h3 class="serif" style="margin-bottom:15px;">土地面積明細</h3>
+            <table> 
+                <thead><tr><th>地號</th><th>權狀面積(坪)</th><th>公設分配(坪)</th><th>合計總面積(坪)</th></tr></thead>
+                <tbody id="table-body"></tbody>
+                <tfoot><tr class="total-row"><td>合計</td><td id="sum-rights">0</td><td id="sum-public">0</td><td id="sum-all">0</td></tr></tfoot>
+            </table>
+        </div>
+
+        <div class="rights-card">
+            <h3>預撥地與會館信託權益</h3>
+            <div>● 持分比例：<span id="display-share1" class="gold-highlight"></span></div>
+            <p>內容包含三筆公設預撥地及私人會館用地等權益保障；會館完工後按比例持分。</p>
+        </div>
+
+        <div class="rights-card high-contrast">
+            <h3>自益信託資產收益</h3>
+            <div>● 持分比例：<span id="display-share2" class="gold-highlight"></span></div>
+            <p>適用 487-223 地號及農地之處分收益分配。</p>
+            <div style="margin-top:15px; padding-top:15px; border-top:1px solid #444;">
+                <span style="color:var(--gold-accent)">預估可分配收益：</span>
+                <span id="display-profit" style="font-size:1.4rem; font-weight:700;"></span> 萬
+            </div>
+        </div>
+    </main>
+
+    <div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lightbox-img"></div>
+
+    <script src="123/data.js"></script>
+
+    <script>
+        // 核心驗證與數據填充邏輯
+        function validate() {
+            const inputId = document.getElementById('id-input').value.trim().toUpperCase();
+            const inputPass = document.getElementById('pass-input').value.trim();
+            const errorElement = document.getElementById('error');
+
+            // 從 unitDatabase (data.js) 檢查
+            if (typeof unitDatabase !== 'undefined' && unitDatabase[inputId]) {
+                const targetData = unitDatabase[inputId];
+                
+                // 比對密碼
+                if (targetData.password === inputPass) {
+                    renderData(targetData);
+                } else {
+                    showError("驗證失敗：密碼錯誤");
+                }
+            } else {
+                showError("驗證失敗：找不到此認購編號");
+            }
+        }
+
+        function renderData(data) {
+            // 1. 隱藏登入區，顯示內容區
+            document.getElementById('auth-box').style.display = 'none';
+            document.getElementById('protected-content').style.display = 'block';
+
+            // 2. 填充基本文字
+            document.getElementById('display-id').innerText = "認購單元 - " + data.id;
+            document.getElementById('display-title').innerText = data.title;
+            document.getElementById('val-price').innerText = data.price;
+            document.getElementById('val-unitPrice').innerText = data.unitPrice;
+            document.getElementById('val-totalArea').innerText = data.totalArea;
+            document.getElementById('display-share1').innerText = data.shareRatio;
+            document.getElementById('display-share2').innerText = data.shareRatio;
+            document.getElementById('display-img-3d').src = data.imgDrone;
+
+            // 3. 處理土地表格
+            let totalRights = 0, totalPublic = 0, totalAll = 0, rows = "";
+            data.landDetails.forEach(item => {
+                totalRights += parseFloat(item.rightsArea || 0);
+                totalPublic += parseFloat(item.publicArea || 0);
+                totalAll += parseFloat(item.sumArea || 0);
+                rows += `<tr><td>${item.landId}</td><td>${item.rightsArea}</td><td>${item.publicArea}</td><td>${item.sumArea}</td></tr>`;
+            });
+
+            document.getElementById('table-body').innerHTML = rows;
+            document.getElementById('sum-rights').innerText = totalRights.toFixed(3);
+            document.getElementById('sum-public').innerText = totalPublic.toFixed(3);
+            document.getElementById('sum-all').innerText = totalAll.toFixed(3);
+
+            // 4. 計算預估收益
+            document.getElementById('display-profit').innerText = (totalAll * 1.46).toFixed(2);
+            
+            window.scrollTo(0, 0);
+        }
+
+        function showError(msg) {
+            const err = document.getElementById('error');
+            err.innerText = msg;
+            err.style.display = 'block';
+        }
+
+        function openLightbox(src) { 
+            document.getElementById('lightbox-img').src = src; 
+            document.getElementById('lightbox').style.display = 'flex'; 
+        }
+
+        // 支援 Enter 鍵登入
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') validate();
+        });
+    </script>
+</body>
+</html>
