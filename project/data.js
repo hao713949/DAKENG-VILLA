@@ -1,197 +1,379 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>認購單元資料 | 大貴段森林莊園</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --forest-deep: #1B3022; --forest-mid: #3E5C46; --gold-accent: #b5a478;
-            --paper-texture: #F9F8F4; --text-dark: #2C332D; --contrast-bg: #142118; 
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--paper-texture); color: var(--text-dark); font-family: 'Noto Sans TC', sans-serif; line-height: 1.6; }
-        h1, h2, h3, .serif { font-family: 'Noto Serif TC', serif; font-weight: 900; }
-        .top-nav { background: #fff; padding: 12px 5%; text-align: center; border-bottom: 1px solid rgba(27, 48, 34, 0.1); position: sticky; top: 0; z-index: 1000; }
-        
-        .auth-overlay { width: 90%; max-width: 400px; margin: 60px auto; padding: 40px 30px; background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; border-radius: 8px; }
-        .auth-overlay input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; font-size: 16px; border-radius: 4px; outline: none; border-color: var(--gold-accent); }
-        .auth-btn { width: 100%; padding: 16px; background: var(--forest-deep); color: var(--gold-accent); border: none; font-weight: 700; cursor: pointer; letter-spacing: 2px; border-radius: 4px; }
-        
-        #protected-content { display: none; padding: 30px 5%; max-width: 1000px; margin: 0 auto; }
-        .section-header { border-left: 5px solid var(--gold-accent); padding-left: 15px; margin-bottom: 30px; }
-        
-        .data-summary { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px; }
-        .data-card { background: #fff; padding: 25px 15px; text-align: center; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .data-val { font-family: 'Noto Serif TC', serif; font-size: 2rem; color: var(--gold-accent); font-weight: 900; }
-        .data-label { font-size: 0.85rem; color: var(--forest-mid); margin-bottom: 8px; }
-
-        .photo-stack { display: flex; flex-direction: column; gap: 30px; margin-bottom: 40px; }
-        .photo-item { background: #fff; padding: 20px; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: center; }
-        .photo-item img { width: 100%; height: auto; border-radius: 2px; margin-top: 15px; display: block; border: 1px solid #eee; cursor: zoom-in; }
-        .photo-caption { font-weight: 700; color: var(--forest-deep); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-
-        .table-wrap { background: #fff; padding: 20px 15px; border-radius: 4px; overflow-x: auto; margin-bottom: 30px; }
-        table { width: 100%; border-collapse: collapse; min-width: 500px; }
-        th { background: #f8f9f8; color: var(--forest-deep); padding: 15px 10px; text-align: left; border-bottom: 2px solid var(--gold-accent); }
-        td { padding: 15px 10px; border-bottom: 1px solid #f0f0f0; }
-        .total-row { background: #fcfbf7; font-weight: 700; color: var(--forest-deep); border-top: 2px solid #eee; }
-
-        .rights-card { background: #fff; padding: 25px; border-radius: 4px; border-top: 3px solid var(--gold-accent); margin-bottom: 20px; }
-        .rights-card.high-contrast { background: var(--contrast-bg); color: #FFFFFF; }
-        .rights-card.high-contrast h3 { color: var(--gold-accent); }
-        .gold-highlight { color: var(--gold-accent); font-weight: 700; font-size: 1.2rem; }
-
-        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
-        .lightbox img { max-width: 95%; max-height: 90vh; }
-
-        @media (min-width: 768px) { .data-summary { grid-template-columns: repeat(3, 1fr); } }
-    </style>
-</head>
-<body>
-    <nav class="top-nav"><span class="serif">大貴段森林莊園 ‧ 認購單元基本資料</span></nav>
-
-    <div id="auth-box" class="auth-overlay">
-        <h3 class="serif">單元資料私密存取</h3>
-        <p id="auth-hint" style="font-size: 0.85rem; color: #888; margin-bottom: 20px;">請輸入認購編號與授權密碼</p>
-        <input type="text" id="id-input" placeholder="請輸入認購編號 (如: C1)">
-        <input type="password" id="pass-input" placeholder="請輸入授權密碼">
-        <button class="auth-btn" onclick="validate()">確認進入</button>
-        <p id="error" style="color: #c0392b; display: none; margin-top: 15px;">驗證失敗：編號或密碼錯誤</p>
-    </div>
-
-    <main id="protected-content">
-        <div class="section-header">
-            <h2 id="display-id" class="serif"></h2>
-            <p id="display-title" style="color: var(--gold-accent); font-weight: 700;"></p>
-        </div>
-
-        <div class="data-summary">
-            <div class="data-card"><p class="data-label">認購總價</p><p class="data-val"><span id="val-price"></span><span style="font-size: 1rem;">萬</span></p></div>
-            <div class="data-card"><p class="data-label">認購單價</p><p class="data-val"><span id="val-unitPrice"></span><span style="font-size: 1rem;">萬/坪</span></p></div>
-            <div class="data-card"><p class="data-label">總面積規模</p><p class="data-val"><span id="val-totalArea"></span><span style="font-size: 1rem;">坪</span></p></div>
-        </div>
-
-        <div class="photo-stack">
-            <div class="photo-item"><p class="photo-caption">全區單元配置圖</p><img src="48Unit-Map.jpg" onclick="openLightbox(this.src)"></div>
-            <div class="photo-item"><p class="photo-caption">全區單元尺寸圖</p><img src="45UnitsizeMap.jpg" onclick="openLightbox(this.src)"></div>
-            <div class="photo-item"><p class="photo-caption">單元原地貌 3D 空拍</p><img id="display-img-3d" src="" onclick="openLightbox(this.src)"></div>
-        </div>
-
-        <div class="table-wrap">
-            <h3 class="serif" style="margin-bottom:15px;">土地面積明細</h3>
-            <table> 
-                <thead><tr><th>地號</th><th>權狀面積(坪)</th><th>公設分配(坪)</th><th>合計總面積(坪)</th></tr></thead>
-                <tbody id="table-body"></tbody>
-                <tfoot><tr class="total-row"><td>合計</td><td id="sum-rights">0</td><td id="sum-public">0</td><td id="sum-all">0</td></tr></tfoot>
-            </table>
-        </div>
-
-        <div class="rights-card">
-            <h3>預撥地與會館信託權益</h3>
-            <div>● 持分比例：<span id="display-share1" class="gold-highlight"></span></div>
-            <p>內容包含三筆公設預撥地及私人會館用地等權益保障;會館完工後按比例持分。</p>
-        </div>
-
-        <div class="rights-card high-contrast">
-            <h3>自益信託資產收益</h3>
-            <div>● 持分比例：<span id="display-share2" class="gold-highlight"></span></div>
-            <p>適用 487-223 地號及農地之處分收益分配。</p>
-            <div style="margin-top:15px; padding-top:15px; border-top:1px solid #444;">
-                <span style="color:var(--gold-accent)">預估可分配收益：</span>
-                <span id="display-profit" style="font-size:1.4rem; font-weight:700;"></span> 萬
-                <br><small>(自益信託用地處分後，預估稅前可分配收益，每坪約 1.46 萬)</small>
-            </div>
-        </div>
-    </main>
-
-    <div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lightbox-img"></div>
-
-    <script src="data.js"></script>
-    <script>
-        // 取得網址參數
-        const params = new URLSearchParams(window.location.search);
-        let unitIdFromUrl = params.get('id') ? params.get('id').toUpperCase() : null;
-
-        // 如果網址有 ID，自動填入輸入框並提示
-        window.onload = function() {
-            if (unitIdFromUrl) {
-                document.getElementById('id-input').value = unitIdFromUrl;
-                document.getElementById('auth-hint').innerText = "請輸入編號 " + unitIdFromUrl + " 之授權密碼";
-            }
-        };
-
-        function validate() {
-            const idInput = document.getElementById('id-input').value.trim().toUpperCase();
-            const passInput = document.getElementById('pass-input').value;
-            const errorDiv = document.getElementById('error');
-
-            if (typeof unitDatabase === 'undefined') {
-                alert("錯誤：無法讀取資料庫檔案。");
-                return;
-            }
-
-            const data = unitDatabase[idInput];
-
-            if (data && passInput === data.password) {
-                renderData(data);
-                document.getElementById('auth-box').style.display = 'none';
-                document.getElementById('protected-content').style.display = 'block';
-                window.scrollTo(0, 0);
-            } else {
-                errorDiv.style.display = 'block';
-                errorDiv.innerText = "驗證失敗：編號或密碼錯誤";
-            }
-        }
-
-        function renderData(data) {
-            document.getElementById('display-id').innerText = "認購單元 - " + data.id;
-            document.getElementById('display-title').innerText = data.title;
-            
-            // 對應 data.js 的 summary 結構
-            document.getElementById('val-price').innerText = data.summary.price;
-            document.getElementById('val-unitPrice').innerText = data.summary.unitPrice;
-            document.getElementById('val-totalArea').innerText = data.summary.totalArea;
-            document.getElementById('display-share1').innerText = data.summary.shareRatio;
-            document.getElementById('display-share2').innerText = data.summary.shareRatio;
-            
-            // 圖片
-            document.getElementById('display-img-3d').src = data.visuals.droneView;
-
-            let totalRights = 0, totalPublic = 0, totalAll = 0, rows = "";
-            
-            // 對應 data.js 的 landDetails 欄位名 (private, public, total)
-            data.landDetails.forEach(item => {
-                const p = parseFloat(item.private || 0);
-                const pub = parseFloat(item.public || 0);
-                const t = parseFloat(item.total || 0);
-                
-                totalRights += p;
-                totalPublic += pub;
-                totalAll += t;
-                
-                rows += `<tr><td>${item.id}</td><td>${item.private}</td><td>${item.public}</td><td>${item.total}</td></tr>`;
-            });
-
-            document.getElementById('table-body').innerHTML = rows;
-            document.getElementById('sum-rights').innerText = totalRights.toFixed(3);
-            document.getElementById('sum-public').innerText = totalPublic.toFixed(3);
-            document.getElementById('sum-all').innerText = totalAll.toFixed(3);
-            
-            // 收益計算：使用合計總坪數 * 1.46
-            document.getElementById('display-profit').innerText = (totalAll * 1.46).toFixed(2);
-        }
-
-        function openLightbox(src) { 
-            document.getElementById('lightbox-img').src = src; 
-            document.getElementById('lightbox').style.display = 'flex'; 
-        }
-
-        // 支援 Enter 鍵
-        document.getElementById('pass-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') validate();
-        });
-    </script>
-</body>
-</html>
+const unitDatabase = {
+    "C1": {
+        "id": "C1",
+        "password": "1934",
+        "title": "地號 487-007 ‧ 核心領袖單元",
+        "summary": {
+            "price": "1,934.88",
+            "unitPrice": "9.03",
+            "totalArea": "214.22",
+            "shareRatio": "1360 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C1.png"
+        },
+        "landDetails": [
+            { "id": "487-007", "private": "158.537", "public": "55.687", "total": "214.224" }
+        ]
+    },
+    "C1-1": {
+        "id": "C1-1",
+        "password": "1599",
+        "title": "地號 487-008 ‧ 核心領袖單元",
+        "summary": {
+            "price": "1,599.88",
+            "unitPrice": "9.43",
+            "totalArea": "169.62",
+            "shareRatio": "1077 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C1-1.png"
+        },
+        "landDetails": [
+            { "id": "487-008", "private": "125.528", "public": "44.092", "total": "169.620" }
+        ]
+    },
+    "C2": {
+        "id": "C2",
+        "password": "2616",
+        "title": "地號 487-020、487-021 ‧ 核心領袖單元",
+        "summary": {
+            "price": "2,616.12",
+            "unitPrice": "9.03",
+            "totalArea": "289.65",
+            "shareRatio": "1839 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C2.png"
+        },
+        "landDetails": [
+            { "id": "487-020", "private": "152.227", "public": "53.470", "total": "205.697" },
+            { "id": "487-021", "private": "62.128", "public": "21.822", "total": "83.950" }
+        ]
+    },
+    "C2-1": {
+        "id": "C2-1",
+        "password": "2219",
+        "title": "地號 487-021-1、487-022 ‧ 核心領袖單元",
+        "summary": {
+            "price": "2,219.16",
+            "unitPrice": "9.03",
+            "totalArea": "245.70",
+            "shareRatio": "1560 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C2-1.png"
+        },
+        "landDetails": [
+            { "id": "487-021-1", "private": "59.792", "public": "21.002", "total": "80.794" },
+            { "id": "487-022", "private": "122.038", "public": "42.866", "total": "164.90" }
+        ]
+    },
+    "C3": {
+        "id": "C3",
+        "password": "2979",
+        "title": "地號 487-023、487-024 ‧ 核心領袖單元",
+        "summary": {
+            "price": "2,979.58",
+            "unitPrice": "9.03",
+            "totalArea": "329.89",
+            "shareRatio": "2094 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C3.png"
+        },
+        "landDetails": [
+            { "id": "487-023", "private": "122.709", "public": "43.102", "total": "165.81" },
+            { "id": "487-024", "private": "121.427", "public": "42.651", "total": "164.078" }
+        ]
+    },
+    "C5": {
+        "id": "C5",
+        "password": "2376",
+        "title": "地號 487-025、487-026 ‧ 核心領袖單元",
+        "summary": {
+            "price": "2,376.73",
+            "unitPrice": "9.03",
+            "totalArea": "263.14",
+            "shareRatio": "1670 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C5.png"
+        },
+        "landDetails": [
+            { "id": "487-025", "private": "98.061", "public": "34.444", "total": "132.51" },
+            { "id": "487-026", "private": "96.679", "public": "33.959", "total": "130.64" }
+        ]
+    },
+    "C6": {
+        "id": "C6",
+        "password": "3586",
+        "title": "地號 487-027、487-028、487-029 ‧ 隱境首席單元",
+        "summary": {
+            "price": "3,586.71",
+            "unitPrice": "8.83",
+            "totalArea": "406.10",
+            "shareRatio": "2578 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C6.png"
+        },
+        "landDetails": [
+            { "id": "487-027", "private": "116.272", "public": "40.841", "total": "157.11" },
+            { "id": "487-028", "private": "92.471", "public": "32.481", "total": "124.95" },
+            { "id": "487-029", "private": "91.794", "public": "32.243", "total": "124.04" }
+        ]
+    },
+    "C7": {
+        "id": "C7",
+        "password": "2208",
+        "title": "地號 487-030、487-031 ‧ 隱境首席單元",
+        "summary": {
+            "price": "2,208.76",
+            "unitPrice": "8.83",
+            "totalArea": "250.08",
+            "shareRatio": "1588 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C7.png"
+        },
+        "landDetails": [
+            { "id": "487-030", "private": "92.861", "public": "32.618", "total": "125.48" },
+            { "id": "487-031", "private": "92.214", "public": "32.390", "total": "124.60" }
+        ]
+    },
+    "C8": {
+        "id": "C8",
+        "password": "2912",
+        "title": "地號 487-032、487-033 ‧ 隱境首席單元",
+        "summary": {
+            "price": "2,912.09",
+            "unitPrice": "8.83",
+            "totalArea": "329.72",
+            "shareRatio": "2093 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C8.png"
+        },
+        "landDetails": [
+            { "id": "487-032", "private": "121.944", "public": "42.833", "total": "164.78" },
+            { "id": "487-033", "private": "122.065", "public": "42.876", "total": "164.94" }
+        ]
+    },
+    "C9": {
+        "id": "C9",
+        "password": "2913",
+        "title": "地號 487-034、487-035 ‧ 隱境首席單元",
+        "summary": {
+            "price": "2,913.28",
+            "unitPrice": "8.83",
+            "totalArea": "329.85",
+            "shareRatio": "2094 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C9.png"
+        },
+        "landDetails": [
+            { "id": "487-034", "private": "121.777", "public": "42.775", "total": "164.55" },
+            { "id": "487-035", "private": "122.331", "public": "42.969", "total": "165.30" }
+        ]
+    },
+    "C10": {
+        "id": "C10",
+        "password": "3614",
+        "title": "地號 487-036、487-037 ‧ 隱境首席單元",
+        "summary": {
+            "price": "3,614.55",
+            "unitPrice": "8.83",
+            "totalArea": "409.25",
+            "shareRatio": "2598 / 100,000"
+        },
+        "visuals": {
+            "droneView": "C10.png"
+        },
+        "landDetails": [
+            { "id": "487-036", "private": "151.958", "public": "53.376", "total": "205.33" },
+            { "id": "487-037", "private": "150.911", "public": "53.008", "total": "203.92" }
+        ]
+    },
+    "D1": {
+        "id": "D1",
+        "password": "2953",
+        "title": "地號 487-056、487-057 ‧ 閱景單元*",
+        "summary": {
+            "price": "2,953.10",
+            "unitPrice": "8.65",
+            "totalArea": "341.48",
+            "shareRatio": "2168 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D1.png"
+        },
+        "landDetails": [
+            { "id": "487-056", "private": "178.466", "public": "62.687", "total": "241.15" },
+            { "id": "487-057", "private": "74.249", "public": "26.080", "total": "100.33" }
+        ]
+    },
+    "D1-1": {
+        "id": "D1-1",
+        "password": "2640",
+        "title": "地號 487-057-1、487-058 ‧ 閱景單元*",
+        "summary": {
+            "price": "2,640.51",
+            "unitPrice": "8.65",
+            "totalArea": "305.34",
+            "shareRatio": "1938 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D1-1.png"
+        },
+        "landDetails": [
+            { "id": "487-057-1", "private": "75.386", "public": "26.480", "total": "101.87" },
+            { "id": "487-058", "private": "150.578", "public": "52.891", "total": "203.47" }
+        ]
+    },
+    "D2": {
+        "id": "D2",
+        "password": "2238",
+        "title": "地號 487-059、487-060 ‧ 閱景單元*",
+        "summary": {
+            "price": "2,238.64",
+            "unitPrice": "9.00",
+            "totalArea": "248.80",
+            "shareRatio": "1579 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D2.png"
+        },
+        "landDetails": [
+            { "id": "487-059", "private": "91.751", "public": "32.228", "total": "123.98" },
+            { "id": "487-060", "private": "92.371", "public": "32.446", "total": "124.82" }
+        ]
+    },
+    "H1": {
+        "id": "H1",
+        "password": "2178",
+        "title": "地號 487-102、487-103 ‧ 巔峰視野單元",
+        "summary": {
+            "price": "2,178.4",
+            "unitPrice": "8.83",
+            "totalArea": "246.65",
+            "shareRatio": "1566 / 100,000"
+        },
+        "visuals": {
+            "droneView": "H1.png"
+        },
+        "landDetails": [
+            { "id": "487-102", "private": "92.018", "public": "32.321", "total": "124.34" },
+            { "id": "487-103", "private": "90.514", "public": "31.793", "total": "122.31" }
+        ]
+    },
+    "H2": {
+        "id": "H2",
+        "password": "2201",
+        "title": "地號 487-104、487-105 ‧ 巔峰視野單元",
+        "summary": {
+            "price": "2,201.93",
+            "unitPrice": "8.83",
+            "totalArea": "249.31",
+            "shareRatio": "1583 / 100,000"
+        },
+        "visuals": {
+            "droneView": "H2.png"
+        },
+        "landDetails": [
+            { "id": "487-104", "private": "92.060", "public": "32.336", "total": "124.4" },
+            { "id": "487-105", "private": "92.440", "public": "32.471", "total": "124.92" }
+        ]
+    },
+    "H3": {
+        "id": "H3",
+        "password": "2190",
+        "title": "地號 487-106、487-107 ‧ 巔峰視野單元",
+        "summary": {
+            "price": "2,190.42",
+            "unitPrice": "8.83",
+            "totalArea": "248.01",
+            "shareRatio": "1574 / 100,000"
+        },
+        "visuals": {
+            "droneView": "H3.png"
+        },
+        "landDetails": [
+            { "id": "487-106", "private": "91.706", "public": "32.212", "total": "123.92" },
+            { "id": "487-107", "private": "91.833", "public": "32.257", "total": "124.09" }
+        ]
+    },
+    "H10": {
+        "id": "H10",
+        "password": "2349",
+        "title": "地號 487-136、487-137 ‧ 森態綠意單元",
+        "summary": {
+            "price": "2,349.28",
+            "unitPrice": "8.45",
+            "totalArea": "278.09",
+            "shareRatio": "1765 / 100,000"
+        },
+        "visuals": {
+            "droneView": "H10.png"
+        },
+        "landDetails": [
+            { "id": "487-136", "private": "105.899", "public": "37.197", "total": "143.10" },
+            { "id": "487-137", "private": "99.901", "public": "35.090", "total": "134.99" }
+        ]
+    },
+    "E5": {
+        "id": "E5",
+        "password": "2780",
+        "title": "地號 487-175、487-176 ‧ 層峰聚落單元",
+        "summary": {
+            "price": "2,780.79",
+            "unitPrice": "8.57",
+            "totalArea": "324.48",
+            "shareRatio": "2060 / 100,000"
+        },
+        "visuals": {
+            "droneView": "E5.png"
+        },
+        "landDetails": [
+            { "id": "487-175", "private": "121.986", "public": "42.842", "total": "164.81" },
+            { "id": "487-176", "private": "118.163", "public": "41.505", "total": "159.67" }
+        ]
+    },
+    "E6": {
+        "id": "E6",
+        "password": "2706",
+        "title": "地號 487-177、487-178 ‧ 層峰聚落單元",
+        "summary": {
+            "price": "2,706.77",
+            "unitPrice": "8.57",
+            "totalArea": "315.84",
+            "shareRatio": "2005 / 100,000"
+        },
+        "visuals": {
+            "droneView": "E6.png"
+        },
+        "landDetails": [
+            { "id": "487-177", "private": "117.821", "public": "41.385", "total": "159.21" },
+            { "id": "487-178", "private": "115.918", "public": "40.716", "total": "156.63" }
+        ]
+    },
+    "E7": {
+        "id": "E7",
+        "password": "2859",
+        "title": "地號 487-179、487-180 ‧ 層峰聚落單元",
+        "summary": {
+            "price": "2,859.85",
+            "unitPrice": "8.57",
+            "totalArea": "333.70",
+            "shareRatio": "2118 / 100,000"
+        },
+        "visuals": {
+            "droneView": "E7.png"
+        },
+        "landDetails": [
+            { "id": "487-179", "private": "115.458", "public": "40.555", "total": "156.01" },
+            { "id": "487-180", "private": "131.50", "public": "46.190", "total": "177.69" }
+        ]
+    }
+};
