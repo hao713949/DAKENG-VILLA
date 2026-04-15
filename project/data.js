@@ -432,6 +432,23 @@ const unitDatabase = {
             { "id": "487-082", "private": "166.139", "public": "58.357", "total": "224.50" }
         ]
     },
+    "D15": {
+        "id": "D15",
+        "password": "2138",
+        "title": "地號 487-083 ‧ 深翠御邸單元*",
+        "summary": {
+            "price": "2,138.04",
+            "unitPrice": "8.03",
+            "totalArea": "266.44",
+            "shareRatio": "1691 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D15.png"
+        },
+        "landDetails": [
+            { "id": "487-083", "private": "197.189", "public": "69.259", "total": "266.44" }
+        ]
+    },
     "H1": {
         "id": "H1",
         "password": "2178",
