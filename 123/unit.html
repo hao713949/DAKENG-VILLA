@@ -2,111 +2,193 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>認購單元系統 | 大貴段森林莊園</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>認購單元資料 | 大貴段森林莊園</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --forest-deep: #1B3022; --forest-mid: #3E5C46; --gold-accent: #b5a478;
-            --paper-texture: #F9F8F4; --text-dark: #2C332D;
+            --paper-texture: #F9F8F4; --text-dark: #2C332D; --contrast-bg: #142118; 
         }
-        body { background-color: var(--paper-texture); font-family: 'Noto Sans TC', sans-serif; margin: 0; padding: 0; }
-        .serif { font-family: 'Noto Serif TC', serif; }
-        .top-nav { background: #fff; padding: 15px; text-align: center; border-bottom: 1px solid #eee; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--paper-texture); color: var(--text-dark); font-family: 'Noto Sans TC', sans-serif; line-height: 1.6; }
+        h1, h2, h3, .serif { font-family: 'Noto Serif TC', serif; font-weight: 900; }
+        .top-nav { background: #fff; padding: 12px 5%; text-align: center; border-bottom: 1px solid rgba(27, 48, 34, 0.1); position: sticky; top: 0; z-index: 1000; }
         
-        /* 登入框樣式 */
-        .auth-overlay { width: 90%; max-width: 400px; margin: 50px auto; padding: 30px; background: #fff; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-        .auth-overlay input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
-        .auth-btn { width: 100%; padding: 15px; background: var(--forest-deep); color: var(--gold-accent); border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .auth-overlay { width: 90%; max-width: 400px; margin: 60px auto; padding: 40px 30px; background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; border-radius: 8px; }
+        .auth-overlay input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; font-size: 16px; border-radius: 4px; outline: none; border-color: var(--gold-accent); }
+        .auth-btn { width: 100%; padding: 16px; background: var(--forest-deep); color: var(--gold-accent); border: none; font-weight: 700; cursor: pointer; letter-spacing: 2px; border-radius: 4px; }
         
-        /* 內容區預設隱藏 */
-        #protected-content { display: none; padding: 20px; max-width: 800px; margin: 0 auto; }
-        .data-card { background: #fff; padding: 20px; margin-bottom: 15px; border-radius: 4px; border-left: 5px solid var(--gold-accent); }
-        .data-val { font-size: 1.8rem; color: var(--gold-accent); font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff; }
-        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
-        th { background: #f8f9f8; }
-        .error-msg { color: #c0392b; background: #fff0f0; padding: 10px; border-radius: 4px; display: none; margin-top: 10px; }
+        #protected-content { display: none; padding: 30px 5%; max-width: 1000px; margin: 0 auto; }
+        .section-header { border-left: 5px solid var(--gold-accent); padding-left: 15px; margin-bottom: 30px; }
+        
+        .data-summary { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px; }
+        .data-card { background: #fff; padding: 25px 15px; text-align: center; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .data-val { font-family: 'Noto Serif TC', serif; font-size: 2rem; color: var(--gold-accent); font-weight: 900; }
+        .data-label { font-size: 0.85rem; color: var(--forest-mid); margin-bottom: 8px; }
+
+        .photo-stack { display: flex; flex-direction: column; gap: 30px; margin-bottom: 40px; }
+        .photo-item { background: #fff; padding: 20px; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: center; }
+        .photo-item img { width: 100%; height: auto; border-radius: 2px; margin-top: 15px; display: block; border: 1px solid #eee; cursor: zoom-in; }
+        .photo-caption { font-weight: 700; color: var(--forest-deep); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+        .table-wrap { background: #fff; padding: 20px 15px; border-radius: 4px; overflow-x: auto; margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        th { background: #f8f9f8; color: var(--forest-deep); padding: 15px 10px; text-align: left; border-bottom: 2px solid var(--gold-accent); }
+        td { padding: 15px 10px; border-bottom: 1px solid #f0f0f0; }
+        .total-row { background: #fcfbf7; font-weight: 700; color: var(--forest-deep); border-top: 2px solid #eee; }
+
+        .rights-card { background: #fff; padding: 25px; border-radius: 4px; border-top: 3px solid var(--gold-accent); margin-bottom: 20px; }
+        .rights-card.high-contrast { background: var(--contrast-bg); color: #FFFFFF; }
+        .rights-card.high-contrast h3 { color: var(--gold-accent); }
+        .gold-highlight { color: var(--gold-accent); font-weight: 700; font-size: 1.2rem; }
+
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
+        .lightbox img { max-width: 95%; max-height: 90vh; }
+
+        @media (min-width: 768px) { .data-summary { grid-template-columns: repeat(3, 1fr); } }
     </style>
 </head>
 <body>
-    <nav class="top-nav"><span class="serif">大貴段森林莊園 ‧ 認購單元系統</span></nav>
+    <nav class="top-nav"><span class="serif">大貴段森林莊園 ‧ 認購單元基本資料</span></nav>
 
     <div id="auth-box" class="auth-overlay">
-        <h3 class="serif">認購人專屬查詢</h3>
-        <p style="font-size: 0.85rem; color: #888;">請輸入認購編號與授權密碼</p>
-        <input type="text" id="id-input" placeholder="編號 (如: C1)">
-        <input type="password" id="pass-input" placeholder="密碼">
-        <button class="auth-btn" onclick="validate()">驗證身分</button>
-        <div id="error" class="error-msg"></div>
+        <h3 class="serif">單元資料私密存取</h3>
+        <p id="auth-hint" style="font-size: 0.85rem; color: #888; margin-bottom: 20px;">請輸入認購編號與授權密碼</p>
+        <input type="text" id="id-input" placeholder="請輸入認購編號 (如: C1)">
+        <input type="password" id="pass-input" placeholder="請輸入授權密碼">
+        <button class="auth-btn" onclick="validate()">確認進入</button>
+        <p id="error" style="color: #c0392b; display: none; margin-top: 15px;">驗證失敗：編號或密碼錯誤</p>
     </div>
 
     <main id="protected-content">
-        <h2 id="display-title" class="serif" style="color: var(--forest-deep);"></h2>
-        <div class="data-card">
-            <p>認購總價：<span id="val-price" class="data-val"></span> 萬</p>
-            <p>土地單價：<span id="val-unitPrice"></span> 萬/坪</p>
-            <p>總面積：<span id="val-totalArea"></span> 坪</p>
-            <p>持分比例：<span id="val-shareRatio"></span></p>
+        <div class="section-header">
+            <h2 id="display-id" class="serif"></h2>
+            <p id="display-title" style="color: var(--gold-accent); font-weight: 700;"></p>
         </div>
 
-        <h3 class="serif">面積明細</h3>
-        <table>
-            <thead><tr><th>地號</th><th>權狀(坪)</th><th>公設(坪)</th><th>合計(坪)</th></tr></thead>
-            <tbody id="table-body"></tbody>
-        </table>
+        <div class="data-summary">
+            <div class="data-card"><p class="data-label">認購總價</p><p class="data-val"><span id="val-price"></span><span style="font-size: 1rem;">萬</span></p></div>
+            <div class="data-card"><p class="data-label">認購單價</p><p class="data-val"><span id="val-unitPrice"></span><span style="font-size: 1rem;">萬/坪</span></p></div>
+            <div class="data-card"><p class="data-label">總面積規模</p><p class="data-val"><span id="val-totalArea"></span><span style="font-size: 1rem;">坪</span></p></div>
+        </div>
+
+        <div class="photo-stack">
+            <div class="photo-item"><p class="photo-caption">全區單元配置圖</p><img src="48Unit-Map.jpg" onclick="openLightbox(this.src)"></div>
+            <div class="photo-item"><p class="photo-caption">全區單元尺寸圖</p><img src="45UnitsizeMap.jpg" onclick="openLightbox(this.src)"></div>
+            <div class="photo-item"><p class="photo-caption">單元原地貌 3D 空拍</p><img id="display-img-3d" src="" onclick="openLightbox(this.src)"></div>
+        </div>
+
+        <div class="table-wrap">
+            <h3 class="serif" style="margin-bottom:15px;">土地面積明細</h3>
+            <table> 
+                <thead><tr><th>地號</th><th>權狀面積(坪)</th><th>公設分配(坪)</th><th>合計總面積(坪)</th></tr></thead>
+                <tbody id="table-body"></tbody>
+                <tfoot><tr class="total-row"><td>合計</td><td id="sum-rights">0</td><td id="sum-public">0</td><td id="sum-all">0</td></tr></tfoot>
+            </table>
+        </div>
+
+        <div class="rights-card">
+            <h3>預撥地與會館信託權益</h3>
+            <div>● 持分比例：<span id="display-share1" class="gold-highlight"></span></div>
+            <p>內容包含三筆公設預撥地及私人會館用地等權益保障;會館完工後按比例持分。</p>
+        </div>
+
+        <div class="rights-card high-contrast">
+            <h3>自益信託資產收益</h3>
+            <div>● 持分比例：<span id="display-share2" class="gold-highlight"></span></div>
+            <p>適用 487-223 地號及農地之處分收益分配。</p>
+            <div style="margin-top:15px; padding-top:15px; border-top:1px solid #444;">
+                <span style="color:var(--gold-accent)">預估可分配收益：</span>
+                <span id="display-profit" style="font-size:1.4rem; font-weight:700;"></span> 萬
+                <br><small>(自益信託用地處分後，預估稅前可分配收益，每坪約 1.46 萬)</small>
+            </div>
+        </div>
     </main>
 
-    <script src="data.js"></script>
+    <div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lightbox-img"></div>
 
+    <script src="data.js"></script>
     <script>
+        // 取得網址參數
+        const params = new URLSearchParams(window.location.search);
+        let unitIdFromUrl = params.get('id') ? params.get('id').toUpperCase() : null;
+
+        // 如果網址有 ID，自動填入輸入框並提示
+        window.onload = function() {
+            if (unitIdFromUrl) {
+                document.getElementById('id-input').value = unitIdFromUrl;
+                document.getElementById('auth-hint').innerText = "請輸入編號 " + unitIdFromUrl + " 之授權密碼";
+            }
+        };
+
         function validate() {
-            const id = document.getElementById('id-input').value.trim().toUpperCase();
-            const pw = document.getElementById('pass-input').value.trim();
+            const idInput = document.getElementById('id-input').value.trim().toUpperCase();
+            const passInput = document.getElementById('pass-input').value;
             const errorDiv = document.getElementById('error');
 
             if (typeof unitDatabase === 'undefined') {
-                errorDiv.innerText = "錯誤：找不到資料庫 (data.js)";
-                errorDiv.style.display = "block";
+                alert("錯誤：無法讀取資料庫檔案。");
                 return;
             }
 
-            const data = unitDatabase[id];
+            const data = unitDatabase[idInput];
 
-            if (data && data.password === pw) {
+            if (data && passInput === data.password) {
+                renderData(data);
                 document.getElementById('auth-box').style.display = 'none';
                 document.getElementById('protected-content').style.display = 'block';
-                
-                // 填充主資料 (注意：這裡對應您 data.js 的 summary 結構)
-                document.getElementById('display-title').innerText = data.title;
-                document.getElementById('val-price').innerText = data.summary.price;
-                document.getElementById('val-unitPrice').innerText = data.summary.unitPrice;
-                document.getElementById('val-totalArea').innerText = data.summary.totalArea;
-                
-                // 如果有持分比例則顯示
-                if(document.getElementById('val-shareRatio')) {
-                    document.getElementById('val-shareRatio').innerText = data.summary.shareRatio || "資料審核中";
-                }
-
-                // 填充表格 (注意：這裡對應您 landDetails 的 private/public 欄位)
-                let rows = "";
-                data.landDetails.forEach(item => {
-                    rows += `<tr>
-                        <td>${item.id}</td>
-                        <td>${item.private}</td>
-                        <td>${item.public}</td>
-                        <td>${item.total}</td>
-                    </tr>`;
-                });
-                document.getElementById('table-body').innerHTML = rows;
-
+                window.scrollTo(0, 0);
             } else {
+                errorDiv.style.display = 'block';
                 errorDiv.innerText = "驗證失敗：編號或密碼錯誤";
-                errorDiv.style.display = "block";
             }
         }
 
-        // 支援 Enter 鍵登入
+        function renderData(data) {
+            document.getElementById('display-id').innerText = "認購單元 - " + data.id;
+            document.getElementById('display-title').innerText = data.title;
+            
+            // 對應 data.js 的 summary 結構
+            document.getElementById('val-price').innerText = data.summary.price;
+            document.getElementById('val-unitPrice').innerText = data.summary.unitPrice;
+            document.getElementById('val-totalArea').innerText = data.summary.totalArea;
+            document.getElementById('display-share1').innerText = data.summary.shareRatio;
+            document.getElementById('display-share2').innerText = data.summary.shareRatio;
+            
+            // 圖片
+            document.getElementById('display-img-3d').src = data.visuals.droneView;
+
+            let totalRights = 0, totalPublic = 0, totalAll = 0, rows = "";
+            
+            // 對應 data.js 的 landDetails 欄位名 (private, public, total)
+            data.landDetails.forEach(item => {
+                const p = parseFloat(item.private || 0);
+                const pub = parseFloat(item.public || 0);
+                const t = parseFloat(item.total || 0);
+                
+                totalRights += p;
+                totalPublic += pub;
+                totalAll += t;
+                
+                rows += `<tr><td>${item.id}</td><td>${item.private}</td><td>${item.public}</td><td>${item.total}</td></tr>`;
+            });
+
+            document.getElementById('table-body').innerHTML = rows;
+            document.getElementById('sum-rights').innerText = totalRights.toFixed(3);
+            document.getElementById('sum-public').innerText = totalPublic.toFixed(3);
+            document.getElementById('sum-all').innerText = totalAll.toFixed(3);
+            
+            // 收益計算：使用合計總坪數 * 1.46
+            document.getElementById('display-profit').innerText = (totalAll * 1.46).toFixed(2);
+        }
+
+        function openLightbox(src) { 
+            document.getElementById('lightbox-img').src = src; 
+            document.getElementById('lightbox').style.display = 'flex'; 
+        }
+
+        // 支援 Enter 鍵
         document.getElementById('pass-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') validate();
         });
