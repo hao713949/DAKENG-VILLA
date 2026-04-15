@@ -199,7 +199,7 @@ const unitDatabase = {
     "D1": {
         "id": "D1",
         "password": "2953",
-        "title": "地號 487-056、487-057 ‧ 閱景單元*",
+        "title": "地號 487-056、487-057 ‧ 雲岫閱海單元*",
         "summary": {
             "price": "2,953.10",
             "unitPrice": "8.65",
@@ -217,7 +217,7 @@ const unitDatabase = {
     "D1-1": {
         "id": "D1-1",
         "password": "2640",
-        "title": "地號 487-057-1、487-058 ‧ 閱景單元*",
+        "title": "地號 487-057-1、487-058 ‧ 雲岫閱海單元*",
         "summary": {
             "price": "2,640.51",
             "unitPrice": "8.65",
@@ -235,7 +235,7 @@ const unitDatabase = {
     "D2": {
         "id": "D2",
         "password": "2238",
-        "title": "地號 487-059、487-060 ‧ 閱景單元*",
+        "title": "地號 487-059、487-060 ‧ 雲岫閱海單元*",
         "summary": {
             "price": "2,238.64",
             "unitPrice": "9.00",
@@ -250,6 +250,188 @@ const unitDatabase = {
             { "id": "487-060", "private": "92.371", "public": "32.446", "total": "124.82" }
         ]
     },
+    "D3": {
+        "id": "D3",
+        "password": "2237",
+        "title": "地號 487-061、487-062 ‧ 雲岫閱海單元*",
+        "summary": {
+            "price": "2,237.76",
+            "unitPrice": "9.00",
+            "totalArea": "248.70",
+            "shareRatio": "1578 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D3.png"
+        },
+        "landDetails": [
+            { "id": "487-061", "private": "91.896", "public": "32.279", "total": "124.18" },
+            { "id": "487-062", "private": "92.154", "public": "32.369", "total": "124.52" }
+        ]
+    },
+    "D5": {
+        "id": "D5",
+        "password": "2234",
+        "title": "地號 487-063、487-064 ‧ 雲岫閱海單元*",
+        "summary": {
+            "price": "2,234.56",
+            "unitPrice": "9.00",
+            "totalArea": "248.34",
+            "shareRatio": "1576 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D5.png"
+        },
+        "landDetails": [
+            { "id": "487-063", "private": "92.202", "public": "32.386", "total": "124.59" },
+            { "id": "487-064", "private": "91.585", "public": "32.169", "total": "123.75" }
+        ]
+    },
+    "D6": {
+        "id": "D6",
+        "password": "2235",
+        "title": "地號 487-065、487-066 ‧ 雲岫閱海單元*",
+        "summary": {
+            "price": "2,235.15",
+            "unitPrice": "9.00",
+            "totalArea": "248.41",
+            "shareRatio": "1577 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D6.png"
+        },
+        "landDetails": [
+            { "id": "487-065", "private": "91.518", "public": "32.146", "total": "123.66" },
+            { "id": "487-066", "private": "92.317", "public": "32.427", "total": "124.74" }
+        ]
+    },
+    "D7": {
+        "id": "D7",
+        "password": "2246",
+        "title": "地號 487-067、487-068 ‧ 雲岫閱海單元*",
+        "summary": {
+            "price": "2,246.21",
+            "unitPrice": "9.00",
+            "totalArea": "249.65",
+            "shareRatio": "1585 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D7.png"
+        },
+        "landDetails": [
+            { "id": "487-067", "private": "91.893", "public": "32.278", "total": "124.17" },
+            { "id": "487-068", "private": "92.858", "public": "32.617", "total": "125.48" }
+        ]
+    },
+    "D8": {
+        "id": "D8",
+        "password": "3395",
+        "title": "地號 487-069、487-070 、487-071‧ 雲岫閱海單元*",
+        "summary": {
+            "price": "3,395.39",
+            "unitPrice": "9.00",
+            "totalArea": "377.35",
+            "shareRatio": "2395 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D8.png"
+        },
+        "landDetails": [
+            { "id": "487-069", "private": "93.061", "public": "32.688", "total": "125.75" },
+            { "id": "487-070", "private": "93.448", "public": "32.824", "total": "126.27" },
+            { "id": "487-071", "private": "92.753", "public": "32.580", "total": "125.33" }
+        ]
+    },
+    "D9": {
+        "id": "D9",
+        "password": "3726",
+        "title": "地號 487-072、487-073、487-074 ‧ 深翠御邸單元*",
+        "summary": {
+            "price": "3,726.54",
+            "unitPrice": "9.01",
+            "totalArea": "413.42",
+            "shareRatio": "2625 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D9.png"
+        },
+        "landDetails": [
+            { "id": "487-072", "private": "123.172", "public": "43.264", "total": "166.44" },
+            { "id": "487-073", "private": "91.264", "public": "32.057", "total": "123.32" },
+            { "id": "487-074", "private": "91.518", "public": "32.146", "total": "123.66" }
+        ]
+    },
+    "D10": {
+        "id": "D10",
+        "password": "2241",
+        "title": "地號 487-075、487-076 ‧ 深翠御邸單元*",
+        "summary": {
+            "price": "2,241.00",
+            "unitPrice": "9.01",
+            "totalArea": "248.62",
+            "shareRatio": "1579 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D10.png"
+        },
+        "landDetails": [
+            { "id": "487-075", "private": "92.063", "public": "32.337", "total": "124.40" },
+            { "id": "487-076", "private": "91.927", "public": "32.289", "total": "124.22" }
+        ]
+    },
+    "D11": {
+        "id": "D11",
+        "password": "2239",
+        "title": "地號 487-077、487-078 ‧ 深翠御邸單元*",
+        "summary": {
+            "price": "2,239.42",
+            "unitPrice": "9.01",
+            "totalArea": "248.44",
+            "shareRatio": "1577 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D11.png"
+        },
+        "landDetails": [
+            { "id": "487-077", "private": "91.906", "public": "32.282", "total": "124.19" },
+            { "id": "487-078", "private": "91.954", "public": "32.299", "total": "124.25" }
+        ]
+    },
+    "D12": {
+        "id": "D12",
+        "password": "2953",
+        "title": "地號 487-079、487-080 ‧ 深翠御邸單元*",
+        "summary": {
+            "price": "2,953.87",
+            "unitPrice": "8.43",
+            "totalArea": "350.49",
+            "shareRatio": "2225 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D12.png"
+        },
+        "landDetails": [
+            { "id": "487-079", "private": "126.763", "public": "44.526", "total": "171.29" },
+            { "id": "487-080", "private": "132.616", "public": "46.583", "total": "179.20" }
+        ]
+    },
+    "D13": {
+        "id": "D13",
+        "password": "3455",
+        "title": "地號 487-081、487-082 ‧ 深翠御邸單元*",
+        "summary": {
+            "price": "3,455.93",
+            "unitPrice": "8.43",
+            "totalArea": "410.06",
+            "shareRatio": "2603 / 100,000"
+        },
+        "visuals": {
+            "droneView": "D13.png"
+        },
+        "landDetails": [
+            { "id": "487-081", "private": "137.326", "public": "48.236", "total": "185.56" },
+            { "id": "487-082", "private": "166.139", "public": "58.357", "total": "224.50" }
+        ]
+    },
     "H1": {
         "id": "H1",
         "password": "2178",
@@ -258,7 +440,7 @@ const unitDatabase = {
             "price": "2,178.4",
             "unitPrice": "8.83",
             "totalArea": "246.65",
-            "shareRatio": "1565 / 100,000"
+            "shareRatio": "1566 / 100,000"
         },
         "visuals": {
             "droneView": "H1.png"
