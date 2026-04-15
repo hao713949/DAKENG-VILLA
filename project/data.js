@@ -258,7 +258,7 @@ const unitDatabase = {
             "price": "2,178.4",
             "unitPrice": "8.83",
             "totalArea": "246.65",
-            "shareRatio": "1566 / 100,000"
+            "shareRatio": "1565 / 100,000"
         },
         "visuals": {
             "droneView": "H1.png"
