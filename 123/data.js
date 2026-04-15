@@ -1,42 +1,80 @@
-function renderUnitInfo(unitId) {
-    const data = unitDatabase[unitId];
-    
-    // 生成地籍明細表格 HTML
-    let tableRows = data.landDetails.map(land => `
-        <tr>
-            <td style="padding:10px; border-bottom:1px solid #eee;">${land.id}</td>
-            <td style="padding:10px; border-bottom:1px solid #eee;">${land.private} 坪</td>
-            <td style="padding:10px; border-bottom:1px solid #eee;">${land.public} 坪</td>
-            <td style="padding:10px; border-bottom:1px solid #eee; font-weight:700;">${land.total} 坪</td>
-        </tr>
-    `).join('');
-
-    // 插入到專屬顯示區塊
-    document.getElementById('personal-info').innerHTML = `
-        <div class="info-card" style="border: 2px solid var(--gold-accent);">
-            <h3 class="serif" style="color:var(--forest-deep);">${data.title}</h3>
-            <hr style="margin:15px 0; opacity:0.1;">
-            
-            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:15px; margin-bottom:20px;">
-                <p><strong>認購總價：</strong><span class="highlight-gold">${data.summary.price} 萬元</span></p>
-                <p><strong>總計面積：</strong>${data.summary.totalArea} 坪</p>
-                <p><strong>土地單價：</strong>${data.summary.unitPrice} 萬元/坪</p>
-                <p><strong>持分比例：</strong>${data.summary.shareRatio}</p>
-            </div>
-
-            <h4 class="serif" style="font-size:1rem; margin-bottom:10px; color:var(--forest-mid);">地籍明細清單</h4>
-            <table style="width:100%; font-size:0.85rem; text-align:left; border-collapse:collapse;">
-                <thead>
-                    <tr style="background:#f9f9f9;">
-                        <th style="padding:10px;">地號</th><th style="padding:10px;">專有面積</th><th style="padding:10px;">公設持分</th><th style="padding:10px;">小計</th>
-                    </tr>
-                </thead>
-                <tbody>${tableRows}</tbody>
-            </table>
-            
-            <p style="margin-top:20px; font-size:0.9rem; color:#666; background:#fffcf5; padding:15px; border-radius:4px;">
-                <strong>顧問筆記：</strong>${data.note}
-            </p>
-        </div>
-    `;
-}
+// data.js
+const unitDatabase = {
+    "C1": {
+        id: "C1",
+        title: "地號 487-007 ‧ 核心領袖單元",
+        password: "1934",
+        summary: {
+            price: "1,934.88",      // 總價 (萬元)
+            unitPrice: "9.03",      // 單價 (萬元/坪)
+            totalArea: "214.22",    // 總面積 (坪)
+            shareRatio: "1360 / 100,000" // 持分比例
+        },
+        visuals: {
+            droneView: "C1.png"     // 航拍圖資
+        },
+        landDetails: [
+            { id: "487-007", private: "158.537", public: "55.687", total: "214.224" }
+        ],
+        note: "核心地段，具備極佳的資產保值性與開發潛力。"
+    },
+    "C2": {
+        id: "C2",
+        title: "地號 487-020、487-021 ‧ 核心領袖單元",
+        password: "2616",
+        summary: {
+            price: "2,616.12",
+            unitPrice: "9.03",
+            totalArea: "289.65",
+            shareRatio: "1839 / 100,000"
+        },
+        visuals: {
+            droneView: "C2.png"
+        },
+        landDetails: [
+            { id: "487-020", private: "152.227", public: "53.470", total: "205.697" },
+            { id: "487-021", private: "62.128", public: "21.822", total: "83.950" }
+        ],
+        note: "雙地號整合單元，面寬優勢利於建築配置。"
+    },
+    "C6": {
+        id: "C6",
+        title: "地號 487-027、487-028、487-029 ‧ 隱境首席單元",
+        password: "3586",
+        summary: {
+            price: "3,586.71",
+            unitPrice: "8.83",
+            totalArea: "406.10",
+            shareRatio: "2578 / 100,000"
+        },
+        visuals: {
+            droneView: "C6.png"
+        },
+        landDetails: [
+            { id: "487-027", private: "116.272", public: "40.841", total: "157.11" },
+            { id: "487-028", private: "92.471", public: "32.481", total: "124.95" },
+            { id: "487-029", private: "91.794", public: "32.243", total: "124.04" }
+        ],
+        note: "大尺度三地號合構，全區稀有高綠覆隱密席位。"
+    },
+    "D1": {
+        id: "D1",
+        title: "地號 487-056、487-057 ‧ 閱景單元*",
+        password: "2953",
+        summary: {
+            price: "2,953.10",
+            unitPrice: "8.65",
+            totalArea: "341.48",
+            shareRatio: "2168 / 100,000"
+        },
+        visuals: {
+            droneView: "D1.png"
+        },
+        landDetails: [
+            { id: "487-056", private: "178.466", public: "62.687", total: "241.15" },
+            { id: "487-057", private: "74.249", public: "26.080", total: "100.33" }
+        ],
+        note: "視野開闊，具備極佳的天際線景觀。"
+    },
+    // ... 其他編號以此類推封裝
+};
