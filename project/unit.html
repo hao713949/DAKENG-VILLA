@@ -21,6 +21,16 @@
         
         #protected-content { display: none; padding: 30px 5%; max-width: 1000px; margin: 0 auto; }
         .section-header { border-left: 5px solid var(--gold-accent); padding-left: 15px; margin-bottom: 30px; }
+
+        /* --- 新增：登入後的按鈕列 --- */
+        .action-bar { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .btn-link { 
+            text-decoration: none; padding: 8px 16px; font-size: 0.85rem; border-radius: 4px; 
+            font-weight: 700; transition: all 0.3s; display: inline-flex; align-items: center;
+        }
+        .btn-primary { background: var(--gold-accent); color: var(--forest-deep); border: 1px solid var(--gold-accent); }
+        .btn-outline { background: transparent; color: var(--forest-deep); border: 1px solid var(--forest-deep); }
+        .btn-link:hover { opacity: 0.8; transform: translateY(-1px); }
         
         .data-summary { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px; }
         .data-card { background: #fff; padding: 25px 15px; text-align: center; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
@@ -65,6 +75,15 @@
         <div class="section-header">
             <h2 id="display-id" class="serif"></h2>
             <p id="display-title" style="color: var(--gold-accent); font-weight: 700;"></p>
+            
+            <div class="action-bar">
+                <a href="https://hao713949.github.io/Dagui-Section/" class="btn-link btn-primary">
+                    ⓘ 大貴段合購案說明
+                </a>
+                <a href="#" class="btn-link btn-outline" onclick="logout()">
+                    登出 / 查詢其他單元
+                </a>
+            </div>
         </div>
 
         <div class="data-summary">
@@ -121,15 +140,11 @@
                     document.getElementById('auth-hint').innerText = "請輸入編號 " + unitIdFromUrl + " 之授權密碼";
                 }
             }
-            // 偵錯日誌
-            if (typeof unitDatabase === 'undefined') {
-                console.error("錯誤：data.js 未能正確加載。");
-            }
         };
 
         function validate() {
             if (typeof unitDatabase === 'undefined') {
-                alert("錯誤：無法讀取資料庫。請檢查網路或確認 data.js 檔案存在。");
+                alert("錯誤：無法讀取資料庫。請檢查網絡或確認 data.js 檔案存在。");
                 return;
             }
 
@@ -155,19 +170,16 @@
             document.getElementById('display-id').innerText = "認購單元 - " + data.id;
             document.getElementById('display-title').innerText = data.title;
             
-            // 摘要
             document.getElementById('val-price').innerText = data.summary.price;
             document.getElementById('val-unitPrice').innerText = data.summary.unitPrice;
             document.getElementById('val-totalArea').innerText = data.summary.totalArea;
             document.getElementById('display-share1').innerText = data.summary.shareRatio;
             document.getElementById('display-share2').innerText = data.summary.shareRatio;
             
-            // 3D 圖片
             if (data.visuals && data.visuals.droneView) {
                 document.getElementById('display-img-3d').src = data.visuals.droneView;
             }
 
-            // 表格計算
             let totalRights = 0, totalPublic = 0, totalAll = 0, rows = "";
             
             if (data.landDetails) {
@@ -189,8 +201,15 @@
             document.getElementById('sum-public').innerText = totalPublic.toFixed(3);
             document.getElementById('sum-all').innerText = totalAll.toFixed(3);
             
-            // 收益 (每坪 1.46 萬)
             document.getElementById('display-profit').innerText = (totalAll * 1.46).toFixed(2);
+        }
+
+        function logout() {
+            // 清除輸入並切換畫面
+            document.getElementById('pass-input').value = "";
+            document.getElementById('protected-content').style.display = 'none';
+            document.getElementById('auth-box').style.display = 'block';
+            window.scrollTo(0, 0);
         }
 
         function openLightbox(src) { 
@@ -198,7 +217,6 @@
             document.getElementById('lightbox').style.display = 'flex'; 
         }
 
-        // Enter 鍵觸發
         document.getElementById('pass-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') validate();
         });
