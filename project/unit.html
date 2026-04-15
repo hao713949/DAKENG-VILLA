@@ -15,47 +15,70 @@
         h1, h2, h3, .serif { font-family: 'Noto Serif TC', serif; font-weight: 900; }
         .top-nav { background: #fff; padding: 12px 5%; text-align: center; border-bottom: 1px solid rgba(27, 48, 34, 0.1); position: sticky; top: 0; z-index: 1000; }
         
+        /* --- 驗證畫面 --- */
         .auth-overlay { width: 90%; max-width: 400px; margin: 60px auto; padding: 40px 30px; background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; border-radius: 8px; }
         .auth-overlay input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; font-size: 16px; border-radius: 4px; outline: none; border-color: var(--gold-accent); }
         .auth-btn { width: 100%; padding: 16px; background: var(--forest-deep); color: var(--gold-accent); border: none; font-weight: 700; cursor: pointer; letter-spacing: 2px; border-radius: 4px; }
         
+        /* --- 主要內容區 --- */
         #protected-content { display: none; padding: 30px 5%; max-width: 1000px; margin: 0 auto; }
-        .section-header { border-left: 5px solid var(--gold-accent); padding-left: 15px; margin-bottom: 30px; }
-
-        /* --- 新增：登入後的按鈕列 --- */
-        .action-bar { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        
+        /* --- 方案三：標題與按鈕橫向排版 --- */
+        .section-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end; 
+            border-left: 5px solid var(--gold-accent); 
+            padding: 0 0 10px 20px; 
+            margin-bottom: 35px; 
+        }
+        .header-text-group { flex: 1; }
+        .action-bar { display: flex; gap: 12px; margin-bottom: 5px; }
+        
         .btn-link { 
-            text-decoration: none; padding: 8px 16px; font-size: 0.85rem; border-radius: 4px; 
+            text-decoration: none; padding: 10px 20px; font-size: 0.85rem; border-radius: 4px; 
             font-weight: 700; transition: all 0.3s; display: inline-flex; align-items: center;
+            white-space: nowrap;
         }
         .btn-primary { background: var(--gold-accent); color: var(--forest-deep); border: 1px solid var(--gold-accent); }
         .btn-outline { background: transparent; color: var(--forest-deep); border: 1px solid var(--forest-deep); }
         .btn-link:hover { opacity: 0.8; transform: translateY(-1px); }
-        
+
+        /* --- 數據卡片 --- */
         .data-summary { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px; }
         .data-card { background: #fff; padding: 25px 15px; text-align: center; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .data-val { font-family: 'Noto Serif TC', serif; font-size: 2rem; color: var(--gold-accent); font-weight: 900; }
         .data-label { font-size: 0.85rem; color: var(--forest-mid); margin-bottom: 8px; }
 
+        /* --- 圖片展示 --- */
         .photo-stack { display: flex; flex-direction: column; gap: 30px; margin-bottom: 40px; }
         .photo-item { background: #fff; padding: 20px; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: center; }
         .photo-item img { width: 100%; height: auto; border-radius: 2px; margin-top: 15px; display: block; border: 1px solid #eee; cursor: zoom-in; }
         .photo-caption { font-weight: 700; color: var(--forest-deep); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
+        /* --- 表格樣式 --- */
         .table-wrap { background: #fff; padding: 20px 15px; border-radius: 4px; overflow-x: auto; margin-bottom: 30px; }
         table { width: 100%; border-collapse: collapse; min-width: 500px; }
         th { background: #f8f9f8; color: var(--forest-deep); padding: 15px 10px; text-align: left; border-bottom: 2px solid var(--gold-accent); }
         td { padding: 15px 10px; border-bottom: 1px solid #f0f0f0; }
         .total-row { background: #fcfbf7; font-weight: 700; color: var(--forest-deep); border-top: 2px solid #eee; }
 
+        /* --- 權益卡片 --- */
         .rights-card { background: #fff; padding: 25px; border-radius: 4px; border-top: 3px solid var(--gold-accent); margin-bottom: 20px; }
         .rights-card.high-contrast { background: var(--contrast-bg); color: #FFFFFF; }
         .rights-card.high-contrast h3 { color: var(--gold-accent); }
         .gold-highlight { color: var(--gold-accent); font-weight: 700; font-size: 1.2rem; }
 
+        /* --- 燈箱 --- */
         .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
         .lightbox img { max-width: 95%; max-height: 90vh; }
 
+        /* --- 響應式優化 --- */
+        @media (max-width: 768px) {
+            .section-header { flex-direction: column; align-items: flex-start; padding-bottom: 0; }
+            .action-bar { margin-top: 20px; width: 100%; }
+            .btn-link { flex: 1; justify-content: center; }
+        }
         @media (min-width: 768px) { .data-summary { grid-template-columns: repeat(3, 1fr); } }
     </style>
 </head>
@@ -73,8 +96,10 @@
 
     <main id="protected-content">
         <div class="section-header">
-            <h2 id="display-id" class="serif"></h2>
-            <p id="display-title" style="color: var(--gold-accent); font-weight: 700;"></p>
+            <div class="header-text-group">
+                <h2 id="display-id" class="serif" style="font-size: 2.2rem; margin-bottom: 5px;"></h2>
+                <p id="display-title" style="color: var(--gold-accent); font-weight: 700; letter-spacing: 1px;"></p>
+            </div>
             
             <div class="action-bar">
                 <a href="https://hao713949.github.io/Dagui-Section/" class="btn-link btn-primary">
@@ -144,7 +169,7 @@
 
         function validate() {
             if (typeof unitDatabase === 'undefined') {
-                alert("錯誤：無法讀取資料庫。請檢查網絡或確認 data.js 檔案存在。");
+                alert("錯誤：無法讀取資料庫。請確認 data.js 檔案存在。");
                 return;
             }
 
@@ -205,7 +230,6 @@
         }
 
         function logout() {
-            // 清除輸入並切換畫面
             document.getElementById('pass-input').value = "";
             document.getElementById('protected-content').style.display = 'none';
             document.getElementById('auth-box').style.display = 'block';
