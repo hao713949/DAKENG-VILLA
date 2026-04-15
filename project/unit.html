@@ -110,31 +110,37 @@
 
     <script src="data.js"></script>
     <script>
-        // 取得網址參數
         const params = new URLSearchParams(window.location.search);
         let unitIdFromUrl = params.get('id') ? params.get('id').toUpperCase() : null;
 
-        // 如果網址有 ID，自動填入輸入框並提示
         window.onload = function() {
             if (unitIdFromUrl) {
-                document.getElementById('id-input').value = unitIdFromUrl;
-                document.getElementById('auth-hint').innerText = "請輸入編號 " + unitIdFromUrl + " 之授權密碼";
+                const idField = document.getElementById('id-input');
+                if (idField) {
+                    idField.value = unitIdFromUrl;
+                    document.getElementById('auth-hint').innerText = "請輸入編號 " + unitIdFromUrl + " 之授權密碼";
+                }
+            }
+            // 偵錯日誌
+            if (typeof unitDatabase === 'undefined') {
+                console.error("錯誤：data.js 未能正確加載。");
             }
         };
 
         function validate() {
+            if (typeof unitDatabase === 'undefined') {
+                alert("錯誤：無法讀取資料庫。請檢查網路或確認 data.js 檔案存在。");
+                return;
+            }
+
             const idInput = document.getElementById('id-input').value.trim().toUpperCase();
             const passInput = document.getElementById('pass-input').value;
             const errorDiv = document.getElementById('error');
 
-            if (typeof unitDatabase === 'undefined') {
-                alert("錯誤：無法讀取資料庫檔案。");
-                return;
-            }
-
             const data = unitDatabase[idInput];
 
             if (data && passInput === data.password) {
+                errorDiv.style.display = 'none';
                 renderData(data);
                 document.getElementById('auth-box').style.display = 'none';
                 document.getElementById('protected-content').style.display = 'block';
@@ -149,37 +155,41 @@
             document.getElementById('display-id').innerText = "認購單元 - " + data.id;
             document.getElementById('display-title').innerText = data.title;
             
-            // 對應 data.js 的 summary 結構
+            // 摘要
             document.getElementById('val-price').innerText = data.summary.price;
             document.getElementById('val-unitPrice').innerText = data.summary.unitPrice;
             document.getElementById('val-totalArea').innerText = data.summary.totalArea;
             document.getElementById('display-share1').innerText = data.summary.shareRatio;
             document.getElementById('display-share2').innerText = data.summary.shareRatio;
             
-            // 圖片
-            document.getElementById('display-img-3d').src = data.visuals.droneView;
+            // 3D 圖片
+            if (data.visuals && data.visuals.droneView) {
+                document.getElementById('display-img-3d').src = data.visuals.droneView;
+            }
 
+            // 表格計算
             let totalRights = 0, totalPublic = 0, totalAll = 0, rows = "";
             
-            // 對應 data.js 的 landDetails 欄位名 (private, public, total)
-            data.landDetails.forEach(item => {
-                const p = parseFloat(item.private || 0);
-                const pub = parseFloat(item.public || 0);
-                const t = parseFloat(item.total || 0);
-                
-                totalRights += p;
-                totalPublic += pub;
-                totalAll += t;
-                
-                rows += `<tr><td>${item.id}</td><td>${item.private}</td><td>${item.public}</td><td>${item.total}</td></tr>`;
-            });
+            if (data.landDetails) {
+                data.landDetails.forEach(item => {
+                    const p = parseFloat(item.private) || 0;
+                    const pub = parseFloat(item.public) || 0;
+                    const t = parseFloat(item.total) || 0;
+                    
+                    totalRights += p;
+                    totalPublic += pub;
+                    totalAll += t;
+                    
+                    rows += `<tr><td>${item.id}</td><td>${p.toFixed(3)}</td><td>${pub.toFixed(3)}</td><td>${t.toFixed(3)}</td></tr>`;
+                });
+            }
 
             document.getElementById('table-body').innerHTML = rows;
             document.getElementById('sum-rights').innerText = totalRights.toFixed(3);
             document.getElementById('sum-public').innerText = totalPublic.toFixed(3);
             document.getElementById('sum-all').innerText = totalAll.toFixed(3);
             
-            // 收益計算：使用合計總坪數 * 1.46
+            // 收益 (每坪 1.46 萬)
             document.getElementById('display-profit').innerText = (totalAll * 1.46).toFixed(2);
         }
 
@@ -188,7 +198,7 @@
             document.getElementById('lightbox').style.display = 'flex'; 
         }
 
-        // 支援 Enter 鍵
+        // Enter 鍵觸發
         document.getElementById('pass-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') validate();
         });
