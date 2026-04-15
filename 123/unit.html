@@ -47,11 +47,12 @@
             <p>認購總價：<span id="val-price" class="data-val"></span> 萬</p>
             <p>土地單價：<span id="val-unitPrice"></span> 萬/坪</p>
             <p>總面積：<span id="val-totalArea"></span> 坪</p>
+            <p>持分比例：<span id="val-shareRatio"></span></p>
         </div>
 
         <h3 class="serif">面積明細</h3>
         <table>
-            <thead><tr><th>地號</th><th>權狀</th><th>公設</th><th>合計</th></tr></thead>
+            <thead><tr><th>地號</th><th>權狀(坪)</th><th>公設(坪)</th><th>合計(坪)</th></tr></thead>
             <tbody id="table-body"></tbody>
         </table>
     </main>
@@ -64,7 +65,6 @@
             const pw = document.getElementById('pass-input').value.trim();
             const errorDiv = document.getElementById('error');
 
-            // 檢查資料庫是否存在
             if (typeof unitDatabase === 'undefined') {
                 errorDiv.innerText = "錯誤：找不到資料庫 (data.js)";
                 errorDiv.style.display = "block";
@@ -77,15 +77,26 @@
                 document.getElementById('auth-box').style.display = 'none';
                 document.getElementById('protected-content').style.display = 'block';
                 
-                // 填充資料
+                // 填充主資料 (注意：這裡對應您 data.js 的 summary 結構)
                 document.getElementById('display-title').innerText = data.title;
-                document.getElementById('val-price').innerText = data.price;
-                document.getElementById('val-unitPrice').innerText = data.unitPrice;
-                document.getElementById('val-totalArea').innerText = data.totalArea;
+                document.getElementById('val-price').innerText = data.summary.price;
+                document.getElementById('val-unitPrice').innerText = data.summary.unitPrice;
+                document.getElementById('val-totalArea').innerText = data.summary.totalArea;
+                
+                // 如果有持分比例則顯示
+                if(document.getElementById('val-shareRatio')) {
+                    document.getElementById('val-shareRatio').innerText = data.summary.shareRatio || "資料審核中";
+                }
 
+                // 填充表格 (注意：這裡對應您 landDetails 的 private/public 欄位)
                 let rows = "";
                 data.landDetails.forEach(item => {
-                    rows += `<tr><td>${item.landId}</td><td>${item.rightsArea}</td><td>${item.publicArea}</td><td>${item.sumArea}</td></tr>`;
+                    rows += `<tr>
+                        <td>${item.id}</td>
+                        <td>${item.private}</td>
+                        <td>${item.public}</td>
+                        <td>${item.total}</td>
+                    </tr>`;
                 });
                 document.getElementById('table-body').innerHTML = rows;
 
@@ -94,6 +105,11 @@
                 errorDiv.style.display = "block";
             }
         }
+
+        // 支援 Enter 鍵登入
+        document.getElementById('pass-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') validate();
+        });
     </script>
 </body>
 </html>
