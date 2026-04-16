@@ -15,12 +15,10 @@
         h1, h2, h3, .serif { font-family: 'Noto Serif TC', serif; font-weight: 900; }
         .top-nav { background: #fff; padding: 12px 5%; text-align: center; border-bottom: 1px solid rgba(27, 48, 34, 0.1); position: sticky; top: 0; z-index: 1000; }
         
-        /* --- 驗證畫面 --- */
         .auth-overlay { width: 90%; max-width: 400px; margin: 60px auto; padding: 40px 30px; background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; border-radius: 8px; }
         .auth-overlay input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; font-size: 16px; border-radius: 4px; outline: none; border-color: var(--gold-accent); }
         .auth-btn { width: 100%; padding: 16px; background: var(--forest-deep); color: var(--gold-accent); border: none; font-weight: 700; cursor: pointer; letter-spacing: 2px; border-radius: 4px; }
         
-        /* --- 主要內容區 --- */
         #protected-content { display: none; padding: 30px 5%; max-width: 1000px; margin: 0 auto; }
         
         .section-header { 
@@ -36,7 +34,6 @@
         }
         .btn-primary { background: var(--gold-accent); color: var(--forest-deep); border: 1px solid var(--gold-accent); }
         .btn-outline { background: transparent; color: var(--forest-deep); border: 1px solid var(--forest-deep); }
-        .btn-link:hover { opacity: 0.8; transform: translateY(-1px); }
 
         .data-summary { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px; }
         .data-card { background: #fff; padding: 25px 15px; text-align: center; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
@@ -54,14 +51,13 @@
         td { padding: 15px 10px; border-bottom: 1px solid #f0f0f0; }
         .total-row { background: #fcfbf7; font-weight: 700; color: var(--forest-deep); border-top: 2px solid #eee; }
 
-        /* 容積檢討區塊樣式 */
         .summary-box { background: #fff; padding: 25px; border-radius: 4px; border-top: 3px solid var(--gold-accent); margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .calc-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; align-items: center; }
         .calc-row:last-child { border-bottom: none; background: #fcfbf7; margin-top: 10px; padding: 15px 10px; }
         .label { font-weight: 700; color: var(--forest-deep); }
         .value { color: var(--text-dark); text-align: right; }
         .gold { color: var(--gold-accent); font-weight: 700; }
-        .sub-label { color: #888; font-weight: normal; font-size: 0.85rem; margin-left: 4px; }
+        .sub-label { color: #888; font-weight: normal; font-size: 0.85rem; margin-left: 4px; display: block; }
 
         .rights-card { background: #fff; padding: 25px; border-radius: 4px; border-top: 3px solid var(--gold-accent); margin-bottom: 20px; }
         .rights-card.high-contrast { background: var(--contrast-bg); color: #FFFFFF; }
@@ -124,13 +120,13 @@
         </div>
 
         <div class="summary-box">
-            <h3 class="serif" style="margin-bottom:15px;">建築容積預估檢討</h3>
+            <h3 class="serif" style="margin-bottom:15px;">建築容積檢討預估</h3>
             <div class="calc-row">
                 <span class="label">基地面積</span>
                 <span class="value"><span id="res-A">0</span> m² / <span id="res-A-p">0</span> 坪</span>
             </div>
             <div class="calc-row">
-                <span class="label">地上總樓地板面積 (H)<span class="sub-label">(含基準/梯間/機房/梯廳)</span></span>
+                <span class="label">地上總樓地板面積</span>
                 <span class="value"><span id="res-H">0</span> m² / <span id="res-H-p">0</span> 坪</span>
             </div>
             <div class="calc-row">
@@ -138,15 +134,11 @@
                 <span class="value"><span id="res-F">0</span> m² / <span id="res-F-p">0</span> 坪</span>
             </div>
             <div class="calc-row">
-                <span class="label">其他<span class="sub-label">(梯間/機房/梯廳/屋突)</span></span>
-                <span class="value"><span id="res-other">0</span> m² / <span id="res-other-p">0</span> 坪</span>
-            </div>
-            <div class="calc-row">
                 <span class="label">停車空間</span>
                 <span class="value"><span id="res-pk-n" class="gold">0</span> 車位 / <span id="res-pk-a">0</span></span>
             </div>
             <div class="calc-row">
-                <span class="label" style="font-size: 1.1rem;">總面積<span class="sub-label">(基準+其他+陽台+停車)</span></span>
+                <span class="label" style="font-size: 1.1rem;">總面積</span>
                 <span class="value gold" style="font-size: 1.2rem; border-bottom: 2px solid var(--gold-accent);"><span id="res-total-sell">0</span> 坪</span>
             </div>
         </div>
@@ -230,19 +222,19 @@
             document.getElementById('sum-all').innerText = totalAll.toFixed(3);
             document.getElementById('display-profit').innerText = (totalAll * 1.46).toFixed(2);
 
-            // --- 核心計算邏輯 (修正：H 排除屋突，總面積全含) ---
+            // --- 核心計算邏輯 ---
             const P_TO_M = 3.3058;
             const A = totalRights * P_TO_M;    // A 基地面積
             const C = A * 0.4;                 // C 基準容積 (40%)
             const D = C * 0.15;                // D 梯間機房
             const E = (C + D) * 0.05;          // E 梯廳
             const F = (C + D + E) * 0.10;      // F 陽台
-            const G = A * 0.20 * (1/8) * 2;    // G 屋突 (2倍計算)
+            const G = A * 0.20 * (1/8) * 2;    // G 屋突
 
-            // 1. 地上總樓地板面積 (H)：含基準、梯間機房、梯廳 (不含屋突)
-            const H = C + D + E;               
+            // 1. 地上總樓地板面積 (H)：含 基準 + 梯間機房 + 梯廳 + 屋突
+            const H = C + D + E + G;               
 
-            // 2. 停車空間法規判定 (依據不含屋突的 H 計算)
+            // 2. 停車空間法規判定 (依據含屋突的 H 計算)
             let pk_n = 1; 
             if (H > 150) {
                 let excess = H - 150;
@@ -253,11 +245,8 @@
             }
             const pk_a = pk_n * 40;            // 停車面積
 
-            // 3. 其他面積：含梯間機房、梯廳、屋突
-            const otherM2 = D + E + G;
-
-            // 4. 總面積 (Total)：基準C + 其他 + 陽台F + 停車pk_a
-            const totalSellM2 = C + otherM2 + F + pk_a;
+            // 3. 總銷售面積 = H (內含基準/梯間/機房/梯廳/屋突) + F (陽台) + pk_a (停車)
+            const totalSellM2 = H + F + pk_a;
 
             // --- 界面更新 ---
             document.getElementById('res-A').innerText = A.toFixed(2);
@@ -269,9 +258,6 @@
             document.getElementById('res-F').innerText = F.toFixed(2);
             document.getElementById('res-F-p').innerText = (F / P_TO_M).toFixed(2);
             
-            document.getElementById('res-other').innerText = otherM2.toFixed(2);
-            document.getElementById('res-other-p').innerText = (otherM2 / P_TO_M).toFixed(2);
-
             document.getElementById('res-pk-n').innerText = pk_n;
             document.getElementById('res-pk-a').innerText = pk_a.toFixed(2) + " m² (" + (pk_a / P_TO_M).toFixed(2) + " 坪)";
             
