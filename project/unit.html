@@ -54,7 +54,6 @@
         td { padding: 15px 10px; border-bottom: 1px solid #f0f0f0; }
         .total-row { background: #fcfbf7; font-weight: 700; color: var(--forest-deep); border-top: 2px solid #eee; }
 
-        /* 容積檢討區塊樣式 */
         .summary-box { background: #fff; padding: 25px; border-radius: 4px; border-top: 3px solid var(--gold-accent); margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .calc-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; align-items: center; }
         .calc-row:last-child { border-bottom: none; background: #fcfbf7; margin-top: 10px; padding: 15px 10px; }
@@ -185,35 +184,55 @@
             }
         };
 
-        // 修改後的驗證函式：支援 SHA-256 加密比對
+        // 核心驗證函式 (含相容性處理)
         async function validate() {
+            const errorEl = document.getElementById('error');
+            const idInput = document.getElementById('id-input').value.trim().toUpperCase();
+            // 強制轉為字串並去除空白
+            const passInput = String(document.getElementById('pass-input').value).trim();
+
             if (typeof unitDatabase === 'undefined') {
                 alert("錯誤：無法讀取資料庫。"); return;
             }
-            const idInput = document.getElementById('id-input').value.trim().toUpperCase();
-            const passInput = document.getElementById('pass-input').value;
-            const data = unitDatabase[idInput];
 
+            const data = unitDatabase[idInput];
             if (!data) {
-                document.getElementById('error').style.display = 'block';
+                errorEl.innerText = "驗證失敗：編號錯誤";
+                errorEl.style.display = 'block';
                 return;
             }
 
-            // 計算使用者輸入密碼的 SHA-256 雜湊值
-            const msgUint8 = new TextEncoder().encode(passInput.toString());
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const inputHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            try {
+                // 1. 嘗試使用標準 Web Crypto API (HTTPS 環境下)
+                let inputHash = "";
+                if (window.crypto && crypto.subtle) {
+                    const msgUint8 = new TextEncoder().encode(passInput);
+                    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    inputHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                }
 
-            // 比對雜湊值 (需與 data.js 中的 authHash 一致)
-            if (inputHash === data.authHash) {
-                renderData(data);
-                document.getElementById('auth-box').style.display = 'none';
-                document.getElementById('protected-content').style.display = 'block';
-                document.getElementById('error').style.display = 'none';
-                window.scrollTo(0, 0);
-            } else {
-                document.getElementById('error').style.display = 'block';
+                // 2. 比對加密雜湊 或 比對明文 (備援機制)
+                if (inputHash === data.authHash || passInput === data.password) {
+                    renderData(data);
+                    document.getElementById('auth-box').style.display = 'none';
+                    document.getElementById('protected-content').style.display = 'block';
+                    errorEl.style.display = 'none';
+                    window.scrollTo(0, 0);
+                } else {
+                    errorEl.innerText = "驗證失敗：密碼錯誤";
+                    errorEl.style.display = 'block';
+                }
+            } catch (e) {
+                console.error("驗證發生意外:", e);
+                // 最後備援：如果連 crypto 都報錯，直接比對明文
+                if (passInput === data.password) {
+                    renderData(data);
+                    document.getElementById('auth-box').style.display = 'none';
+                    document.getElementById('protected-content').style.display = 'block';
+                } else {
+                    alert("驗證系統異常，請聯絡管理員");
+                }
             }
         }
 
@@ -245,13 +264,13 @@
             document.getElementById('display-profit').innerText = (totalAll * 1.46).toFixed(2);
 
             const P_TO_M = 3.3058;
-            const A = totalRights * P_TO_M;    // A 基地面積
-            const C = A * 0.4;                  // C 基準容積 (40%)
-            const D = C * 0.15;                 // D 梯間機房
-            const E = (C + D) * 0.05;           // E 梯廳
-            const F = (C + D + E) * 0.10;       // F 陽台
-            const G = A * 0.20 * (1/8) * 2;     // G 屋突
-            const H = C + D + E + G;           // H 地上總樓地板面積
+            const A = totalRights * P_TO_M;
+            const C = A * 0.4;
+            const D = C * 0.15;
+            const E = (C + D) * 0.05;
+            const F = (C + D + E) * 0.10;
+            const G = A * 0.20 * (1/8) * 2;
+            const H = C + D + E + G;
             
             let pk_n = 1; 
             if (H > 150) {
@@ -292,7 +311,10 @@
             document.getElementById('lightbox').style.display = 'flex'; 
         }
 
-        document.getElementById('pass-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') validate(); });
+        // 綁定 Enter 鍵
+        document.getElementById('pass-input').addEventListener('keypress', (e) => { 
+            if (e.key === 'Enter') validate(); 
+        });
     </script>
 </body>
 </html>
