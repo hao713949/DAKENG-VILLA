@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>認購單元資料 | 大貴段 潤德莊園</title>
+    <title>認購單元資料 | 大貴段森林莊園</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -17,12 +17,15 @@
         
         /* --- 驗證畫面 --- */
         .auth-overlay { width: 90%; max-width: 400px; margin: 60px auto; padding: 40px 30px; background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; border-radius: 8px; }
-        .auth-overlay input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; font-size: 16px; border-radius: 4px; outline: none; border-color: var(--gold-accent); }
-        .auth-btn { width: 100%; padding: 16px; background: var(--forest-deep); color: var(--gold-accent); border: none; font-weight: 700; cursor: pointer; letter-spacing: 2px; border-radius: 4px; }
+        .auth-overlay input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; font-size: 16px; border-radius: 4px; outline: none; transition: border-color 0.3s; }
+        .auth-overlay input:focus { border-color: var(--gold-accent); box-shadow: 0 0 0 2px rgba(181, 164, 120, 0.1); }
+        .auth-btn { width: 100%; padding: 16px; background: var(--forest-deep); color: var(--gold-accent); border: none; font-weight: 700; cursor: pointer; letter-spacing: 2px; border-radius: 4px; transition: all 0.3s; }
+        .auth-btn:hover { background: #26422f; }
         .auth-btn:disabled { background: #ccc; cursor: not-allowed; }
         
         /* --- 主要內容區 --- */
-        #protected-content { display: none; padding: 30px 5%; max-width: 1000px; margin: 0 auto; }
+        #protected-content { display: none; padding: 30px 5%; max-width: 1000px; margin: 0 auto; animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .section-header { 
             display: flex; justify-content: space-between; align-items: flex-end; 
@@ -37,7 +40,7 @@
         }
         .btn-primary { background: var(--gold-accent); color: var(--forest-deep); border: 1px solid var(--gold-accent); }
         .btn-outline { background: transparent; color: var(--forest-deep); border: 1px solid var(--forest-deep); }
-        .btn-link:hover { opacity: 0.8; transform: translateY(-1px); }
+        .btn-link:hover { opacity: 0.8; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 
         .data-summary { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px; }
         .data-card { background: #fff; padding: 25px 15px; text-align: center; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
@@ -46,7 +49,8 @@
 
         .photo-stack { display: flex; flex-direction: column; gap: 30px; margin-bottom: 40px; }
         .photo-item { background: #fff; padding: 20px; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: center; }
-        .photo-item img { width: 100%; height: auto; border-radius: 2px; margin-top: 15px; display: block; border: 1px solid #eee; cursor: zoom-in; }
+        .photo-item img { width: 100%; height: auto; border-radius: 2px; margin-top: 15px; display: block; border: 1px solid #eee; cursor: zoom-in; transition: transform 0.3s; }
+        .photo-item img:hover { transform: scale(1.01); }
         .photo-caption { font-weight: 700; color: var(--forest-deep); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
         .table-wrap { background: #fff; padding: 20px 15px; border-radius: 4px; overflow-x: auto; margin-bottom: 30px; }
@@ -66,8 +70,8 @@
         .rights-card.high-contrast { background: var(--contrast-bg); color: #FFFFFF; }
         .gold-highlight { color: var(--gold-accent); font-weight: 700; font-size: 1.2rem; }
 
-        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
-        .lightbox img { max-width: 95%; max-height: 90vh; }
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; cursor: zoom-out; }
+        .lightbox img { max-width: 95%; max-height: 90vh; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
 
         @media (max-width: 768px) {
             .section-header { flex-direction: column; align-items: flex-start; padding-bottom: 0; }
@@ -78,13 +82,13 @@
     </style>
 </head>
 <body>
-    <nav class="top-nav"><span class="serif">大貴段森林莊園 ‧ 認購單元基本資料</span></nav>
+    <nav class="top-nav"><span class="serif">大貴段潤德莊園 ‧ 認購單元基本資料</span></nav>
 
     <div id="auth-box" class="auth-overlay">
         <h3 class="serif">單元資料私密存取</h3>
         <p id="auth-hint" style="font-size: 0.85rem; color: #888; margin-bottom: 20px;">請輸入認購編號與授權密碼</p>
-        <input type="text" id="id-input" placeholder="請輸入認購編號 (如: C1)">
-        <input type="password" id="pass-input" placeholder="請輸入授權密碼">
+        <input type="text" id="id-input" placeholder="請輸入認購編號 (如: C1)" spellcheck="false">
+        <input type="password" id="pass-input" placeholder="請輸入授權密碼" autocomplete="current-password">
         <button id="auth-btn" class="auth-btn" onclick="validate()">確認進入</button>
         <p id="error" style="color: #c0392b; display: none; margin-top: 15px;">驗證失敗：編號或密碼錯誤</p>
     </div>
@@ -96,7 +100,7 @@
                 <p id="display-title" style="color: var(--gold-accent); font-weight: 700; letter-spacing: 1px;"></p>
             </div>
             <div class="action-bar">
-                <a href="https://hao713949.github.io/Dagui-Section/" class="btn-link btn-primary">大貴段合購案說明</a>
+                <a href="https://hao713949.github.io/Dagui-Section/%E5%A4%A7%E8%B2%B4%E6%AE%B5%E3%80%90%E6%BD%A4%E5%BE%B7%E8%8E%8A%E5%9C%92%E3%80%91.html" class="btn-link btn-primary" target="_blank" rel="noopener">大貴段潤德莊園說明</a>
                 <a href="#" class="btn-link btn-outline" onclick="logout()">查詢其他認購單元</a>
             </div>
         </div>
@@ -108,9 +112,9 @@
         </div>
 
         <div class="photo-stack">
-            <div class="photo-item"><p class="photo-caption">全區單元配置圖</p><img src="48Unit-Map.jpg" onclick="openLightbox(this.src)"></div>
-            <div class="photo-item"><p class="photo-caption">全區單元尺寸圖</p><img src="45UnitsizeMap.jpg" onclick="openLightbox(this.src)"></div>
-            <div class="photo-item"><p class="photo-caption">單元原地貌 3D 空拍</p><img id="display-img-3d" src="" onclick="openLightbox(this.src)"></div>
+            <div class="photo-item"><p class="photo-caption">全區單元配置圖</p><img src="48Unit-Map.jpg" onclick="openLightbox(this.src)" alt="全區單元配置圖"></div>
+            <div class="photo-item"><p class="photo-caption">全區單元尺寸圖</p><img src="45UnitsizeMap.jpg" onclick="openLightbox(this.src)" alt="全區單元尺寸圖"></div>
+            <div class="photo-item"><p class="photo-caption">單元原地貌 3D 空拍</p><img id="display-img-3d" src="" onclick="openLightbox(this.src)" alt="單元原地貌 3D 空拍"></div>
         </div>
 
         <div class="table-wrap">
@@ -168,7 +172,7 @@
         </div>
     </main>
 
-    <div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lightbox-img"></div>
+    <div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lightbox-img" src=""></div>
 
     <script>
         // --- 設定區 ---
@@ -198,7 +202,6 @@
                 return;
             }
 
-            // 顯示載入狀態
             authBtn.disabled = true;
             authBtn.innerText = "驗證中...";
             errorMsg.style.display = 'none';
@@ -209,13 +212,15 @@
                     body: JSON.stringify({ unitId: idInput, password: passInput })
                 });
 
+                if (!response.ok) throw new Error("Network response was not ok");
+
                 const result = await response.json();
 
                 if (result.success) {
                     renderData(result.data);
                     document.getElementById('auth-box').style.display = 'none';
                     document.getElementById('protected-content').style.display = 'block';
-                    window.scrollTo(0, 0);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
                     errorMsg.style.display = 'block';
                     authBtn.disabled = false;
@@ -258,13 +263,13 @@
 
             // --- 核心計算邏輯 ---
             const P_TO_M = 3.3058;
-            const A = totalRights * P_TO_M;    // A 基地面積
-            const C = A * 0.4;                 // C 基準容積 (40%)
-            const D = C * 0.15;                // D 梯間機房
-            const E = (C + D) * 0.05;          // E 梯廳
-            const F = (C + D + E) * 0.10;      // F 陽台
-            const G = A * 0.20 * (1/8) * 2;    // G 屋突
-            const H = C + D + E + G;           // H 地上總樓地板面積
+            const A = totalRights * P_TO_M;    
+            const C = A * 0.4;                 
+            const D = C * 0.15;                
+            const E = (C + D) * 0.05;          
+            const F = (C + D + E) * 0.10;      
+            const G = A * 0.20 * (1/8) * 2;    
+            const H = C + D + E + G;           
             
             let pk_n = 1; 
             if (H > 150) {
@@ -298,11 +303,13 @@
             document.getElementById('auth-box').style.display = 'block';
             document.getElementById('auth-btn').disabled = false;
             document.getElementById('auth-btn').innerText = "確認進入";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function openLightbox(src) { 
+            const lb = document.getElementById('lightbox');
             document.getElementById('lightbox-img').src = src; 
-            document.getElementById('lightbox').style.display = 'flex'; 
+            lb.style.display = 'flex'; 
         }
 
         document.getElementById('pass-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') validate(); });
