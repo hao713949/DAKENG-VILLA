@@ -9,18 +9,37 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
     <style>
-        :root {
-            --dark: #121212;
-            --gold: #d4af37;
-            --grey: #f9f9f9;
-            --nav-grey: rgba(238, 238, 238, 0.95);
-        }
+        /* 修改字體間距與粗細 */
+.hero h1 {
+    font-weight: 200; /* 讓字體變細，增加高級感 */
+    letter-spacing: 15px; /* 加大間距 */
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3); /* 增加深度 */
+}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang TC", "Heiti TC", sans-serif; scroll-behavior: smooth; }
-        body { background: #fff; color: var(--dark); line-height: 1.6; overflow-x: hidden; }
-        
-        .reveal { opacity: 0; transform: translateY(25px); transition: all 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+/* 優化內容區塊的呼吸感 */
+section.content {
+    padding: 120px 8%; /* 增加側邊留白 */
+}
+
+/* 標籤設計優化 */
+.section-label {
+    letter-spacing: 6px;
+    font-family: 'Playfair Display', serif; /* 若有引入此字體 */
+    margin-bottom: 20px;
+}
+
+/* 核心理念卡片優化 */
+.concept-card {
+    border: 1px solid #eee; /* 改為細邊框 */
+    background: transparent;
+    transition: 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.concept-card:hover {
+    background: #fdfdfd;
+    transform: translateY(-10px); /* 優雅的位移 */
+    box-shadow: 0 30px 60px rgba(0,0,0,0.03);
+}
 
         /* --- 1. 導覽模組 --- */
         nav { 
