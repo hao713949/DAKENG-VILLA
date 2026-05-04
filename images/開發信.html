@@ -259,7 +259,7 @@
             margin-top: auto;
             padding: 10mm 25mm 15mm;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.2fr 1fr; /* 略微調整比例讓文字排版更鬆容 */
             gap: 20px;
             align-items: start;
             border-top: 1px solid var(--border-soft);
@@ -268,6 +268,7 @@
         .profile-info h2 {
             font-size: 36pt;
             margin: 0;
+            line-height: 1.1; /* 修正行高確保標題對齊基準線 */
             color: var(--dark-blue);
             font-weight: 900;
             letter-spacing: 5px;
@@ -292,7 +293,7 @@
         .contact-card {
             border-left: 3px solid var(--primary-gold);
             padding-left: 25px;
-            padding-top: 5px;
+            padding-top: 4px; /* 微調此處，使右側標題與左側姓名頂端對齊 */
         }
 
         .contact-row {
@@ -388,7 +389,7 @@
 
         <footer class="footer">
             <div class="profile-info">
-                <h1>蔡侑霖</h1>
+                <h2>蔡侑霖</h2>
                 <div class="profile-tagline">國考經紀人 ‧ 30年資歷</div>
                 <div class="profile-details">
                     專注於豪宅、土地、工業地產。<br>
@@ -397,7 +398,7 @@
                 </div>
             </div>
             <div class="contact-card">
-                <div style="font-weight: 700; margin-bottom: 12px; color: var(--dark-blue); font-size: 14pt;">【資產出售策略建議】</div>
+                <div style="font-weight: 700; margin-bottom: 12px; color: var(--dark-blue); font-size: 14pt; line-height: 1.1;">【資產出售策略建議】</div>
                 <div class="contact-row"><span>Phone |</span> <strong>0912-713-949</strong></div>
                 <div class="contact-row"><span>LINE ID|</span> <strong>0912713949</strong></div>
             </div>
