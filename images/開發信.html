@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        :root {
+            --primary-gold: #B4946A;
+            --dark-blue: #1A2B3C;
+            --text-main: #2D3436;
+            --text-light: #636E72;
+            --border-soft: #EAEAEA;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            background-color: #f0f0f0;
+            -webkit-print-color-adjust: exact;
+        }
+
+        .container {
+            width: 210mm;
+            min-height: 297mm;
+            height: auto;
+            margin: 0 auto;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(var(--border-soft) 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            padding-bottom: 10mm;
+        }
+
+        @media print {
+            body { background-color: white; }
+            .container { box-shadow: none; min-height: 297mm; }
+            .case-study, .footer, section, .section-value, .hero { 
+                page-break-inside: avoid; 
+                break-inside: avoid;
+            }
+        }
+
+        /* --- Header --- */
+        .hero {
+            padding: 15mm 20mm 10mm;
+            text-align: center;
+            border-bottom: 4px double var(--primary-gold);
+        }
+
+        .hero h1 strong {
+            display: block;
+            font-size: 42pt;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+
+        .hero .subtitle {
+            font-size: 11pt;
+            letter-spacing: 0.5em;
+            color: var(--primary-gold);
+            border-top: 1px solid var(--primary-gold);
+            padding-top: 8px;
+            display: inline-block;
+        }
+
+        /* --- Sections --- */
+        section {
+            padding: 8mm 25mm 5mm;
+        }
+
+        .section-title {
+            font-size: 18pt;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 6mm;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, var(--primary-gold), transparent);
+            margin-left: 15px;
+        }
+
+        .problem-item {
+            font-size: 13pt;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .problem-item span {
+            width: 8px; height: 8px;
+            background: var(--primary-gold);
+            transform: rotate(45deg);
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        /* --- Strategy Cards --- */
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5mm;
+        }
+
+        .strategy-card {
+            border: 1px solid var(--border-soft);
+            border-top: 4px solid var(--primary-gold);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .strategy-card h3 {
+            font-size: 15pt;
+            background: #fdfaf5;
+            margin: 0 0 10px 0;
+            padding: 5px 0;
+        }
+
+        .strategy-card p {
+            font-size: 10pt;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* --- Value Box --- */
+        .section-value {
+            margin: 5mm 25mm;
+            padding: 8mm;
+            border: 1px solid var(--dark-blue);
+            text-align: center;
+        }
+
+        .value-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            text-align: left;
+            margin: 6mm 0;
+        }
+
+        .value-check {
+            font-size: 12pt;
+            border-left: 3px solid var(--primary-gold);
+            padding-left: 12px;
+            font-weight: 500;
+        }
+
+        .cta-highlight {
+            background: var(--dark-blue);
+            color: white;
+            padding: 10px 25px;
+            font-size: 14pt;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        /* --- Case Study --- */
+        .case-study {
+            margin: 5mm 25mm;
+            padding: 8mm;
+            background-color: #fcfcfc;
+            border: 1px solid var(--border-soft);
+        }
+
+        .case-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .case-visual {
+            height: 75mm;
+            display: flex;
+            flex-direction: column;
+            border: 1px dashed var(--primary-gold);
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .case-images {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .case-img {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .case-img-left {
+            border-right: 1px solid var(--primary-gold);
+            background-image: url('https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/DJI_0795.JPG');
+        }
+
+        .case-img-right {
+            background-image: url('https://raw.githubusercontent.com/hao713949/DAKENG-VILLA/main/images/48%E5%96%AE%E5%85%83%E5%9C%B0.jpg');
+        }
+
+        .case-content h4 {
+            color: var(--primary-gold);
+            margin: 0 0 10px 0;
+            font-size: 14pt;
+            font-weight: 700;
+        }
+
+        .case-content p {
+            font-size: 11pt;
+            line-height: 1.8;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .case-stat {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding: 12px 0;
+            border-top: 1px solid var(--border-soft);
+            border-bottom: 1px solid var(--border-soft);
+            text-align: center;
+        }
+
+        .stat-item b {
+            display: block;
+            font-size: 16pt;
+            color: var(--dark-blue);
+        }
+
+        .stat-item span {
+            font-size: 9pt;
+            color: var(--text-light);
+        }
+
+        /* --- Footer --- */
+        .footer {
+            margin-top: auto;
+            padding: 10mm 25mm 15mm;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+            border-top: 1px solid var(--border-soft);
+        }
+
+        .profile-info h2 {
+            font-size: 36pt;
+            margin: 0;
+            color: var(--dark-blue);
+            font-weight: 900;
+            letter-spacing: 5px;
+        }
+
+        .profile-tagline {
+            background: var(--primary-gold);
+            color: white;
+            padding: 5px 15px;
+            font-weight: 700;
+            margin: 12px 0;
+            display: inline-block;
+            font-size: 12pt;
+        }
+
+        .profile-details {
+            font-size: 10.5pt;
+            color: var(--text-main);
+            line-height: 1.8;
+        }
+
+        .contact-card {
+            border-left: 3px solid var(--primary-gold);
+            padding-left: 25px;
+            padding-top: 5px;
+        }
+
+        .contact-row {
+            border-bottom: 1px solid var(--border-soft);
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12pt;
+        }
+
+        .bottom-slogan {
+            text-align: center;
+            color: var(--primary-gold);
+            font-weight: 700;
+            padding: 10mm 0;
+            letter-spacing: 4px;
+            font-size: 13pt;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="hero">
+            <h1><strong>資產，不只是出售</strong></h1>
+            <div class="subtitle">ELEVATING PROPERTY VALUE</div>
+        </header>
+
+        <section>
+            <div class="section-title">您是否也遇過？</div>
+            <div class="problem-item"><span></span> 很多人詢問，卻始終談不到理想價格</div>
+            <div class="problem-item"><span></span> 不同仲介說法很多，但沒有明確方向</div>
+            <div class="problem-item"><span></span> 不確定該直接賣，還是先規劃再出售</div>
+            <div class="problem-item"><span></span> 擔心現在賣掉，未來反而少賺</div>
+        </section>
+
+        <section>
+            <div class="section-title">不同資產，決定不同賣法</div>
+            <div class="strategy-grid">
+                <div class="strategy-card">
+                    <h3>住宅</h3>
+                    <p>不職是增加曝光，而是精準勾勒生活願景。</p>
+                </div>
+                <div class="strategy-card">
+                    <h3>土地</h3>
+                    <p>價值不在於現狀，而是在於未來開發藍圖。</p>
+                </div>
+                <div class="strategy-card">
+                    <h3>工商</h3>
+                    <p>超越傳統媒合，尋找具備遠見的企業使用者。</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-value">
+            <div style="font-size: 16pt; font-weight: 700; color: var(--dark-blue);">我做的，不職是幫您賣</div>
+            <div class="value-grid">
+                <div class="value-check">分析「怎麼賣最有利」</div>
+                <div class="value-check">找出真正會買的人</div>
+                <div class="value-check">設計銷售方式與產品定位</div>
+                <div class="value-check">協助談判與交易安全</div>
+            </div>
+            <div class="cta-highlight">讓資產 從「被比較」 變成「被選擇」</div>
+        </div>
+
+        <div class="case-study">
+            <div class="section-title">成功案例：大坑風景區 —— 10+ 億土地盤活計畫</div>
+            <div class="case-grid">
+                <div class="case-visual">
+                    <div class="case-images">
+                        <div class="case-img case-img-left"></div>
+                        <div class="case-img case-img-right"></div>
+                    </div>
+                    <div style="background: var(--dark-blue); color: white; width: 100%; padding: 6px; font-size: 10pt; text-align: center; letter-spacing: 2px;">
+                        專業解構 ‧ 價值倍增
+                    </div>
+                </div>
+                <div class="case-content">
+                    <h4>打破閒置困局，成就價值極大化</h4>
+                    <p>
+                        <strong>破局策略：</strong>克服大坑風景區高額開發成本，成功引入投資。<br>
+                        <strong>精準分割：</strong>將 20,000 坪巨量土地轉化為 48 個精品開發單元。<br>
+                        <strong>全案監管：</strong>深度介入基礎建設與複雜法規問題，降低投資風險。<br>
+                        <strong>最終成果：</strong>透過合購方式活化資產，成就閒置土地的價值極大化。
+                    </p>
+                    <div class="case-stat">
+                        <div class="stat-item"><b>20,000+</b><span>原始坪數</span></div>
+                        <div class="stat-item"><b>48</b><span>規劃單元</span></div>
+                        <div class="stat-item"><b>10億+</b><span>盤活價值</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="profile-info">
+                <h1>蔡侑霖</h1>
+                <div class="profile-tagline">國考經紀人 ‧ 30年資歷</div>
+                <div class="profile-details">
+                    專注於豪宅、土地、工業地產。<br>
+                    以「單月千萬經紀人」實戰標準，<br>
+                    守護每一筆資產的最佳成交價值。
+                </div>
+            </div>
+            <div class="contact-card">
+                <div style="font-weight: 700; margin-bottom: 12px; color: var(--dark-blue); font-size: 14pt;">【資產出售策略建議】</div>
+                <div class="contact-row"><span>Phone |</span> <strong>0912-713-949</strong></div>
+                <div class="contact-row"><span>LINE ID|</span> <strong>0912713949</strong></div>
+            </div>
+        </footer>
+
+        <div class="bottom-slogan">
+            多數價格的差距，不在市場，在於出售方式
+        </div>
+    </div>
+</body>
+</html>
