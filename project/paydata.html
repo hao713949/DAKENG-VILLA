@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>認購單元查詢系統</title>
+    <style>
+        /* 保留並優化原本的樣式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        #login-container, #main-content {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h2, h3 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: bold; }
+        
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover { background-color: #2980b9; }
+
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 5px solid #3498db;
+        }
+
+        hr { border: 0; border-top: 1px solid #eee; margin: 20px 0; }
+
+        .error { color: #e74c3c; font-weight: bold; margin-top: 10px; text-align: center; }
+
+        /* 手機端隱藏主內容直到登錄 */
+        #main-content { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="login-container">
+    <h2>單元查詢登錄</h2>
+    <div class="input-group">
+        <label>認購單元編號</label>
+        <input type="text" id="unitInput" placeholder="例如：C1">
+    </div>
+    <div class="input-group">
+        <label>授權碼</label>
+        <input type="password" id="authInput" placeholder="請輸入 6 位授權碼">
+    </div>
+    <button onclick="checkLogin()">登錄查詢</button>
+    <div id="loginError" class="error"></div>
+</div>
+
+<div id="main-content">
+    <div id="result"></div>
+    <button style="background-color: #95a5a6; margin-top: 20px;" onclick="location.reload()">重新查詢</button>
+</div>
+
+<script>
+// ===============================
+// Data API 資料庫
+// ===============================
+const purchaseUnits = [
+  { unitNo: "C1", area: 214.22, landNos: ["487-7"], mainPricePerPing: 6.79, mainTotal: 1455.02, subPricePerPing: 2.24, subTotal: 479.86, totalPrice: 1934.88 },
+  { unitNo: "C1-1", area: 169.62, landNos: ["487-8"], mainPricePerPing: 6.79, mainTotal: 1152.08, subPricePerPing: 2.64, subTotal: 447.80, totalPrice: 1599.88 },
+  { unitNo: "C2", area: 289.65, landNos: ["487-20", "487-21"], mainPricePerPing: 6.79, mainTotal: 1967.31, subPricePerPing: 2.24, subTotal: 648.81, totalPrice: 2616.12 },
+  { unitNo: "C2-1", area: 245.70, landNos: ["487-2101", "487-22"], mainPricePerPing: 6.79, mainTotal: 1668.80, subPricePerPing: 2.24, subTotal: 550.36, totalPrice: 2219.16 },
+  { unitNo: "C3", area: 329.89, landNos: ["487-23", "487-24"], mainPricePerPing: 6.79, mainTotal: 2240.63, subPricePerPing: 2.24, subTotal: 738.95, totalPrice: 2979.58 },
+  { unitNo: "C5", area: 263.14, landNos: ["487-25", "487-26"], mainPricePerPing: 6.79, mainTotal: 1787.29, subPricePerPing: 2.24, subTotal: 589.44, totalPrice: 2376.73 },
+  { unitNo: "C6", area: 406.10, landNos: ["487-27", "487-28", "487-29"], mainPricePerPing: 6.79, mainTotal: 2677.05, subPricePerPing: 2.24, subTotal: 909.67, totalPrice: 3586.72 },
+  { unitNo: "C7", area: 250.08, landNos: ["487-30", "487-31"], mainPricePerPing: 6.59, mainTotal: 1648.57, subPricePerPing: 2.24, subTotal: 560.19, totalPrice: 2208.76 },
+  { unitNo: "C8", area: 329.72, landNos: ["487-32", "487-33"], mainPricePerPing: 6.59, mainTotal: 2173.52, subPricePerPing: 2.24, subTotal: 738.57, totalPrice: 2912.09 },
+  { unitNo: "C9", area: 329.85, landNos: ["487-34", "487-35"], mainPricePerPing: 6.59, mainTotal: 2174.41, subPricePerPing: 2.24, subTotal: 738.87, totalPrice: 2913.28 },
+  { unitNo: "C10", area: 409.25, landNos: ["487-36", "487-37"], mainPricePerPing: 6.59, mainTotal: 2697.82, subPricePerPing: 2.24, subTotal: 916.73, totalPrice: 3614.55 }
+];
+
+// ===============================
+// 登錄邏輯
+// ===============================
+function checkLogin() {
+    const unitNo = document.getElementById("unitInput").value.trim().toUpperCase();
+    const authCode = document.getElementById("authInput").value.trim();
+    const errorDiv = document.getElementById("loginError");
+
+    // 驗證授權碼
+    if (authCode !== "781945") {
+        errorDiv.innerText = "授權碼錯誤";
+        return;
+    }
+
+    // 查找單元
+    const data = purchaseUnits.find(u => u.unitNo.toUpperCase() === unitNo);
+
+    if (data) {
+        errorDiv.innerText = "";
+        showReport(data);
+    } else {
+        errorDiv.innerText = "查無此單元編號";
+    }
+}
+
+// ===============================
+// 計算與顯示邏輯
+// ===============================
+function showReport(data) {
+    const cfg = { m1: 0.3, m2: 0.3, m3: 0.4, s1: 1.0 };
+
+    // 計算各期款項
+    const p1_main = (data.mainTotal * cfg.m1).toFixed(2);
+    const p1_sub  = (data.subTotal * cfg.s1).toFixed(2);
+    const p1_total = (parseFloat(p1_main) + parseFloat(p1_sub)).toFixed(2);
+    const p2_main = (data.mainTotal * cfg.m2).toFixed(2);
+    const p3_main = (data.mainTotal * cfg.m3).toFixed(2);
+
+    document.getElementById("login-container").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+
+    document.getElementById("result").innerHTML = `
+        <h2>認購單元：${data.unitNo}</h2>
+        <div class="info-box">
+            <p><strong>面積：</strong>${data.area} 坪</p>
+            <p><strong>地號：</strong>${data.landNos.join("、")}</p>
+            <p><strong>認購總價：</strong>${data.totalPrice} 萬</p>
+        </div>
+        <hr>
+        <h3>第一期：簽約款</h3>
+        <ul>
+            <li>主約款 (30%)：${p1_main} 萬</li>
+            <li>附約款 (100%)：${p1_sub} 萬</li>
+            <li><strong>本期合計：${p1_total} 萬</strong></li>
+        </ul>
+        <h3>第二期：備件款</h3>
+        <ul>
+            <li>主約款 (30%)：${p2_main} 萬</li>
+        </ul>
+        <h3>第三期：完稅款</h3>
+        <ul>
+            <li>主約款 (40%)：${p3_main} 萬</li>
+        </ul>
+    `;
+}
+</script>
+
+</body>
+</html>
