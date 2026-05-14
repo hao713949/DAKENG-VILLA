@@ -255,7 +255,7 @@ function renderPayment(data) {
     document.getElementById('auth-box').style.display = 'none';
     document.getElementById('payment-content').style.display = 'block';
 
-    document.getElementById('res-unit-name').innerText = `認購單元 : ${data.unitNo}`;
+    document.getElementById('res-unit-name').innerText = `認購單元付款明細 : ${data.unitNo}`;
     document.getElementById('res-area').innerText = data.area + " 坪";
     
     const landText = Array.isArray(data.landNos) ? data.landNos.join(", ") : data.landNos;
