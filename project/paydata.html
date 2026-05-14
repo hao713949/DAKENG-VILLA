@@ -80,6 +80,7 @@
         .label { color: var(--forest-mid); font-size: 0.85rem; font-weight: 500; }
         .value { color: var(--text-dark); font-weight: 600; }
         .price-focus { color: var(--forest-deep); font-size: 1.3rem; font-weight: 900; }
+        .unit-price { color: var(--gold-accent); font-size: 0.9rem; font-weight: 700; }
 
         /* 版面優化區塊 */
         .detail-section {
@@ -107,6 +108,16 @@
         .total-highlight {
             margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--paper-texture);
             color: var(--forest-deep); font-weight: 700;
+        }
+
+        /* 優化底部聲明 */
+        .disclaimer-box {
+            margin: 30px 0; padding: 20px; background: #fff;
+            border: 1px solid #e0e0e0; border-radius: 8px; text-align: center;
+        }
+        .disclaimer-text {
+            font-size: 1rem; color: #a4433a; font-weight: 700;
+            line-height: 1.5; letter-spacing: 0.5px;
         }
 
         #loading-overlay {
@@ -149,11 +160,13 @@
 
         <div class="detail-section">
             <div class="data-row"><span class="label">主約款總價</span><span class="value" id="res-main-total">-- 萬</span></div>
+            <div class="data-row" style="border-top: 1px dashed #eee; margin-top: 5px;"><span class="label">● 主約單價</span><span class="unit-price" id="res-main-price">-- 萬/坪</span></div>
             <div class="sub-heading">● 主約款包含：權狀面積，公設持分，公設預撥地，會館用地，487-223特二（變），農地等權益。</div>
         </div>
 
         <div class="detail-section">
             <div class="data-row"><span class="label">附約款總價</span><span class="value" id="res-sub-total">-- 萬</span></div>
+            <div class="data-row" style="border-top: 1px dashed #eee; margin-top: 5px;"><span class="label">● 附約單價</span><span class="unit-price" id="res-sub-price">-- 萬/坪</span></div>
             <div class="sub-heading">● 附約款包含：基礎工程讓渡費，會館營建成本，社區基金，487-223特二（變）回饋金，土地整合顧問費及仲介中人費等。</div>
         </div>
 
@@ -182,15 +195,20 @@
             </div>
         </div>
 
+        <div class="disclaimer-box">
+            <p class="disclaimer-text">
+                本付款明細之總價與期程僅供參考，<br>
+                最終仍以「主附約正式契約書」所載為準。
+            </p>
+        </div>
+
         <button class="btn-gold" style="background:#444; margin-bottom:40px; letter-spacing:2px;" onclick="location.reload()">重新查詢</button>
     </div>
-            <div class="sub-heading">本付款表內總價，最終仍以主附約契約書所載為準。</div>
-        </div>
 </div>
 
 <script>
 // ==========================================
-// 數據庫連接配置：已更換為您的正式 /exec 網址
+// 數據庫連接配置
 // ==========================================
 const API_URL = "https://script.google.com/macros/s/AKfycbxd7wykwJ-QztdlaL7GHU-NdokPBJH9CbV0iaIkyEqS7GHjgdrd2VBJ4_Pqz2Txe9udeQ/exec"; 
 
@@ -200,7 +218,6 @@ async function handleVerify() {
     const errMsg = document.getElementById('err-msg');
     const loading = document.getElementById('loading-overlay');
 
-    // 1. 驗證授權碼
     if (passInput !== "781945") {
         errMsg.innerText = "授權密碼錯誤";
         return;
@@ -215,13 +232,10 @@ async function handleVerify() {
     errMsg.innerText = "";
 
     try {
-        // 2. 從 API 抓取資料
         const response = await fetch(API_URL);
         if (!response.ok) throw new Error("網路連線異常");
         
         const allData = await response.json();
-        
-        // 3. 欄位校準：使用 API 回傳的 unitNo 進行匹配
         const target = allData.find(u => u.unitNo === unitInput);
 
         if (target) {
@@ -241,11 +255,9 @@ function renderPayment(data) {
     document.getElementById('auth-box').style.display = 'none';
     document.getElementById('payment-content').style.display = 'block';
 
-    // 4. 欄位校準：對應您的 API 欄位名稱 (unitNo, landNos, totalPrice, mainTotal, subTotal)
     document.getElementById('res-unit-name').innerText = `認購單元 : ${data.unitNo}`;
     document.getElementById('res-area').innerText = data.area + " 坪";
     
-    // 處理地號 (API 回傳的是陣列)
     const landText = Array.isArray(data.landNos) ? data.landNos.join(", ") : data.landNos;
     document.getElementById('res-land').innerText = landText;
     
@@ -253,7 +265,11 @@ function renderPayment(data) {
     document.getElementById('res-main-total').innerText = data.mainTotal + " 萬";
     document.getElementById('res-sub-total').innerText = data.subTotal + " 萬";
 
-    // 5. 付款期程計算邏輯
+    // 渲染新增的單價欄位 (假設 API 有提供 mainPrice 與 subPrice)
+    document.getElementById('res-main-price').innerText = (data.mainPrice || "--") + " 萬/坪";
+    document.getElementById('res-sub-price').innerText = (data.subPrice || "--") + " 萬/坪";
+
+    // 付款期程計算
     const p1_main = (data.mainTotal * 0.3).toFixed(2);
     const p1_sub = (data.subTotal * 1.0).toFixed(2);
     const p2_main = (data.mainTotal * 0.3).toFixed(2);
