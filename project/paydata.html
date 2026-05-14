@@ -189,7 +189,7 @@
         </div>
 
         <div class="phase-box">
-            <div class="phase-head">第二期：備件款『簽約後45天』</div>
+            <div class="phase-head">第二期：備件款『簽約後50天』</div>
             <div class="phase-body">
                 <div class="data-row"><span class="label">主約款 (30%)</span><span class="val-main" id="p2-m">-- 萬</span></div>
                 <div class="data-row total-highlight"><span>本期合計</span><span class="val-total" id="p2-t">-- 萬</span></div>
@@ -280,7 +280,7 @@ function renderPayment(data) {
     // 付款期程計算
     const p1_main = (data.mainTotal * 0.3).toFixed(2);
     const p1_sub = (data.subTotal * 1.0).toFixed(2);
-    const p2_main = (data.mainTotal * 0.3).toFixed(2);
+    const p2_main = (data.mainTotal * 0.2).toFixed(2);
     const p3_main = (data.mainTotal * 0.4).toFixed(2);
 
     document.getElementById('p1-m').innerText = p1_main + " 萬";
