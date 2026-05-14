@@ -188,9 +188,9 @@
 
 <script>
 // ==========================================
-// 數據庫連接配置 (使用您的 Google Apps Script API)
+// 數據庫連接配置：使用正式發佈的 /exec 網址
 // ==========================================
-const API_URL = "https://script.google.com/macros/s/AKfycbyIwXBh8oTcnDte6YE1EGV79jb-caB0zDnE0-4nHEN3/dev"; // 範例，請更換為您的正式 Web App URL
+const API_URL = "https://script.google.com/macros/s/AKfycbxd7wykwJ-QztdlaL7GHU-NdokPBJH9CbV0iaIkyEqS7GHjgdrd2VBJ4_Pqz2Txe9udeQ/exec"; 
 
 async function handleVerify() {
     const unitID = document.getElementById('unit-input').value.trim().toUpperCase();
@@ -198,8 +198,14 @@ async function handleVerify() {
     const errMsg = document.getElementById('err-msg');
     const loading = document.getElementById('loading-overlay');
 
-    if (pass !== "781945") {
+    // 修正授權碼為 718945
+    if (pass !== "718945") {
         errMsg.innerText = "授權密碼錯誤";
+        return;
+    }
+
+    if (unitID === "") {
+        errMsg.innerText = "請輸入單元編號";
         return;
     }
 
@@ -207,36 +213,20 @@ async function handleVerify() {
     errMsg.innerText = "";
 
     try {
-        // 發送請求調用資料 (這段代碼會調用您提供的腳本數據)
-        // 為了讓您立即測試，此處包含 48 個單元的動態查找邏輯
-        // 實際應用時建議將 JSON 部署為 Web App
         const response = await fetch(API_URL);
+        if (!response.ok) throw new Error("網路連線異常");
+        
         const allData = await response.json();
         const target = allData.find(u => u.id === unitID);
 
         if (target) {
             renderPayment(target);
         } else {
-            // 如果 API 尚未部署完成，此處提供內置邏輯以防只能讀取 C1
-            // 這裡的邏輯會自動處理您輸入的任何編號
-            if(unitID !== "") {
-                // 模擬抓取到資料後的動作
-                renderPayment({
-                    id: unitID,
-                    area: 214.22, // 實際數值將從 API 取得
-                    land: "487-7",
-                    mainTotal: 1455.02,
-                    subTotal: 479.86,
-                    total: 1934.88
-                });
-            } else {
-                errMsg.innerText = "請輸入正確的單元編號";
-            }
+            errMsg.innerText = "找不到該單元編號，請重新輸入";
         }
     } catch (e) {
-        // 如果連線 API 失敗，嘗試從本地邏輯匹配 (確保 48 個單元皆可開啟)
-        errMsg.innerText = "資料庫連線中，請稍候...";
-        // 這裡可加入 fallback 邏輯
+        console.error(e);
+        errMsg.innerText = "系統連線中，或資料格式讀取錯誤";
     } finally {
         loading.style.display = 'none';
     }
