@@ -236,7 +236,6 @@ async function handleVerify() {
         if (!response.ok) throw new Error("網路連線異常");
         
         const allData = await response.json();
-        // 將 API 的數據進行匹配
         const target = allData.find(u => u.unitNo === unitInput);
 
         if (target) {
@@ -256,7 +255,6 @@ function renderPayment(data) {
     document.getElementById('auth-box').style.display = 'none';
     document.getElementById('payment-content').style.display = 'block';
 
-    // 基礎資訊顯示
     document.getElementById('res-unit-name').innerText = `認購單元 : ${data.unitNo}`;
     document.getElementById('res-area').innerText = data.area + " 坪";
     
@@ -267,12 +265,12 @@ function renderPayment(data) {
     document.getElementById('res-main-total').innerText = data.mainTotal + " 萬";
     document.getElementById('res-sub-total').innerText = data.subTotal + " 萬";
 
-    // --- 重點修正：對接 API 欄位顯示單價 ---
-    // 這裡調用 data.mainPrice 與 data.subPrice 顯示到對應 HTML ID
-    document.getElementById('res-main-price').innerText = (data.mainPrice ? data.mainPrice : "--") + " 萬/坪";
-    document.getElementById('res-sub-price').innerText = (data.subPrice ? data.subPrice : "--") + " 萬/坪";
+    // --- 修改部分：正式調用 mainPricePerPing 與 subPricePerPing ---
+    document.getElementById('res-main-price').innerText = (data.mainPricePerPing || "--") + " 萬/坪";
+    document.getElementById('res-sub-price').innerText = (data.subPricePerPing || "--") + " 萬/坪";
+    // ------------------------------------------------------------
 
-    // 付款期程計算邏輯
+    // 付款期程計算
     const p1_main = (data.mainTotal * 0.3).toFixed(2);
     const p1_sub = (data.subTotal * 1.0).toFixed(2);
     const p2_main = (data.mainTotal * 0.3).toFixed(2);
