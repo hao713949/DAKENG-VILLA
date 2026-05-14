@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>付款明細查詢 | 大貴段潤德莊園</title>
+    <title>認購單元付款明細查詢 | 大貴段潤德莊園</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -122,13 +122,13 @@
 
 <div class="main-wrapper">
     <div id="auth-box" class="auth-container">
-        <h2>認購單元查詢</h2>
+        <h2>認購單元付款明細查詢</h2>
         <div class="input-group">
-            <label>單元編號 (UNIT NO.)</label>
+            <label>認購單元編號</label>
             <input type="text" id="unit-input" placeholder="例如: C1">
         </div>
         <div class="input-group">
-            <label>授權密碼 (PASSWORD)</label>
+            <label>授權密碼 </label>
             <input type="password" id="pass-input" placeholder="請輸入 6 位授權碼">
         </div>
         <button class="btn-gold" id="login-btn" onclick="handleVerify()">進入查詢</button>
@@ -149,12 +149,12 @@
 
         <div class="detail-section">
             <div class="data-row"><span class="label">主約款總價</span><span class="value" id="res-main-total">-- 萬</span></div>
-            <div class="sub-heading">● 主約款包含權狀面積，公設持分，公設預撥地，會館用地，487-223特二（變），農地等權益。</div>
+            <div class="sub-heading">● 主約款包含：權狀面積，公設持分，公設預撥地，會館用地，487-223特二（變），農地等權益。</div>
         </div>
 
         <div class="detail-section">
             <div class="data-row"><span class="label">附約款總價</span><span class="value" id="res-sub-total">-- 萬</span></div>
-            <div class="sub-heading">● 附約款包含基礎工程讓渡費，會館營建成本，社區基金，487-223特二（變）回饋金，土地整合顧問費及仲介中人費等。</div>
+            <div class="sub-heading">● 附約款包含：基礎工程讓渡費，會館營建成本，社區基金，487-223特二（變）回饋金，土地整合顧問費及仲介中人費等。</div>
         </div>
 
         <div class="phase-box">
@@ -184,6 +184,8 @@
 
         <button class="btn-gold" style="background:#444; margin-bottom:40px; letter-spacing:2px;" onclick="location.reload()">重新查詢</button>
     </div>
+            <div class="sub-heading">本付款表內總價，最終仍以主附約契約書所載為準。</div>
+        </div>
 </div>
 
 <script>
