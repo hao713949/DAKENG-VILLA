@@ -149,7 +149,7 @@
         </div>
         <div class="input-group">
             <label>授權密碼 </label>
-            <input type="password" id="pass-input" placeholder="請輸入 6 位授權碼">
+            <input type="password" id="pass-input" placeholder="請輸入授權碼">
         </div>
         <button class="btn-gold" id="login-btn" onclick="handleVerify()">進入查詢</button>
         <p id="err-msg" style="color:#a4433a; font-size:0.8rem; margin-top:15px; min-height:1.2em;"></p>
@@ -227,13 +227,13 @@ async function handleVerify() {
     const errMsg = document.getElementById('err-msg');
     const loading = document.getElementById('loading-overlay');
 
-    if (passInput !== "781945") {
-        errMsg.innerText = "授權密碼錯誤";
-        return;
-    }
-
     if (unitInput === "") {
         errMsg.innerText = "請輸入單元編號";
+        return;
+    }
+    
+    if (passInput === "") {
+        errMsg.innerText = "請輸入授權密碼";
         return;
     }
 
@@ -245,12 +245,17 @@ async function handleVerify() {
         if (!response.ok) throw new Error("網路連線異常");
         
         const allData = await response.json();
-        const target = allData.find(u => u.unitNo === unitInput);
+        
+        // 修改處：根據輸入的單元編號(ID)與密碼(password)進行匹配
+        const target = allData.find(u => 
+            u.unitNo.toUpperCase() === unitInput && 
+            String(u.password).trim() === passInput
+        );
 
         if (target) {
             renderPayment(target);
         } else {
-            errMsg.innerText = "找不到該單元編號，請重新輸入";
+            errMsg.innerText = "單元編號或授權密碼錯誤";
         }
     } catch (e) {
         console.error(e);
