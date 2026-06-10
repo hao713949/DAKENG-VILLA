@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>潤德莊園合購案深度分析</title>
+    <style>
+        /* 全域設定：強制一頁一頁滑動 */
+        html { scroll-snap-type: y mandatory; }
+        body {
+            margin: 0;
+            background-color: #0f172a; /* 深邃夜幕藍 */
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            color: #f8fafc;
+        }
+        .slide {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 50px;
+            scroll-snap-align: start;
+        }
+        .card {
+            background: #ffffff;
+            width: 90%;
+            max-width: 950px;
+            padding: 80px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            color: #1e293b;
+        }
+        h1 { font-size: 3.2em; border-left: 10px solid #c5a059; padding-left: 25px; margin-bottom: 15px; color: #0f172a; }
+        h2 { font-size: 1.8em; color: #64748b; font-weight: 400; margin-top: 0; margin-bottom: 45px; }
+        .content { font-size: 1.6em; line-height: 1.75; color: #334155; }
+        .highlight { color: #b45309; font-weight: 700; background: #fef3c7; padding: 0 5px; border-radius: 4px; }
+        ul { padding-left: 30px; }
+        li { margin-bottom: 20px; }
+        hr { border: 0; height: 3px; background: #e2e8f0; margin: 35px 0; border-radius: 2px; }
+        
+        /* 結論區塊樣式 */
+        .conclusion-box {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f1f5f9;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px dashed #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide">
+        <div class="card">
+            <h1>潤德莊園合購案</h1>
+            <h2>土地來源深度分析 & 地主讓利最大主因</h2>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="card">
+            <h1>背景敘述：台紙私有化</h1>
+            <hr>
+            <div class="content">
+                <p>核心目標：僅動用 <span class="highlight">5 億現金</span>，成功拿下市值 <span class="highlight">80 億</span> 的台紙。</p>
+                <ul>
+                    <li><strong>家族持股基礎：</strong>余美玲家族原已持股約 20%~40%，大幅降低現金需求。</li>
+                    <li><strong>高槓桿融資：</strong>以台紙優質土地資產作為潛在擔保，向銀行爭取併購貸款。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="card">
+            <h1>私有化後資產估值</h1>
+            <hr>
+            <div class="content">
+                <p>台紙私有化後資產規模巨大，主要包含：</p>
+                <ul>
+                    <li><strong>台南新營廠：</strong>擁有 16.8 萬坪精華工業地，估值 168 億元。</li>
+                    <li><strong>越南資產：</strong>鳳凰湖高爾夫球場及約 350 萬平米之開發土地權益，估值 1372 億元。</li>
+                    <li><strong>其他資產：</strong>因造紙所需購買的數萬坪林地山坡地，『潤德莊園』為其中之一。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="card">
+            <h1>土地開發與資產價值化</h1>
+            <hr>
+            <div class="content">
+                <ul>
+                    <li><strong>取得優勢：</strong>潤德莊園源自原始山坡林地，取得成本幾乎為「0」。</li>
+                    <li><strong>開發蛻變：</strong>歷經 20 年整體開發變更，已成功轉型為「特二種住宅區」。</li>
+                    <li><strong>地主願景：</strong>地主希望能透過簡化資產去化過程，優化繁雜的處理程序。</li>
+                </ul>
+                <div class="conclusion-box">
+                    <strong>最終策略：資產價值化，實現整體打包出售。</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
