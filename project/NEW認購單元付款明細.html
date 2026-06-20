@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L8G75W1992"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-L8G75W1992');
+    </script>
+
+    <title>認購單元付款明細查詢 | 大貴段潤德莊園</title>
+  
+  <link rel="stylesheet" href="...">
+  <style>
+    :root { ... }
+  </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>認購單元付款明細查詢 | 大貴段潤德莊園</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --forest-deep: #1B3022;
+            --forest-mid: #3E5C46;
+            --gold-accent: #b5a478;
+            --paper-texture: #F9F8F4;
+            --text-dark: #2C332D;
+            --contrast-bg: #142118;
+            --white-glass: rgba(255, 255, 255, 0.9);
+            --price-main: #1B3022; /* 主約顏色 */
+            --price-sub: #7A6A43;  /* 附約顏色 */
+            --price-total: #a4433a; /* 總計顏色 */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--paper-texture);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .main-wrapper { width: 100%; max-width: 500px; padding: 20px; }
+
+        /* 登錄界面 */
+        .auth-container {
+            background: white; border-radius: 8px; padding: 40px 25px;
+            box-shadow: 0 15px 35px rgba(27, 48, 34, 0.1);
+            border: 1px solid rgba(181, 164, 120, 0.2);
+            margin-top: 40px; text-align: center;
+        }
+
+        .auth-container h2 {
+            font-family: 'Noto Serif TC', serif; color: var(--forest-deep);
+            margin-bottom: 30px; letter-spacing: 3px; font-size: 1.5rem;
+        }
+
+        .input-group { margin-bottom: 25px; text-align: left; }
+        .input-group label { display: block; font-size: 0.75rem; color: var(--forest-mid); margin-bottom: 8px; font-weight: 700; }
+        
+        input {
+            width: 100%; padding: 16px; border: 1px solid #e0e0e0; border-radius: 4px;
+            font-size: 1rem; background: #fdfdfd; transition: 0.3s;
+        }
+
+        input:focus { outline: none; border-color: var(--gold-accent); box-shadow: 0 0 0 3px rgba(181, 164, 120, 0.1); }
+
+        .btn-gold {
+            width: 100%; padding: 18px; background: var(--forest-deep); color: var(--gold-accent);
+            border: none; border-radius: 4px; font-size: 1rem; font-weight: 700;
+            cursor: pointer; letter-spacing: 4px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* 內容呈現 */
+        #payment-content { display: none; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .header-section {
+            background: var(--forest-deep); padding: 40px 20px; text-align: center;
+            border-radius: 8px 8px 0 0; margin-bottom: 20px;
+        }
+
+        .header-section h1 { font-family: 'Noto Serif TC', serif; color: var(--gold-accent); font-size: 1.5rem; margin-bottom: 8px; }
+
+        .summary-card {
+            background: white; padding: 25px; border-radius: 8px; margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-top: 4px solid var(--gold-accent);
+        }
+
+        .data-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+        .data-row:last-child { border-bottom: none; }
+        .label { color: var(--forest-mid); font-size: 0.85rem; font-weight: 500; }
+        .value { color: var(--text-dark); font-weight: 600; }
+        .price-focus { color: var(--forest-deep); font-size: 1.3rem; font-weight: 900; }
+        .unit-price { color: var(--gold-accent); font-size: 0.9rem; font-weight: 700; }
+
+        /* 版面優化區塊 */
+        .detail-section {
+            background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px;
+            border: 1px solid rgba(181, 164, 120, 0.1);
+        }
+
+        .sub-heading {
+            display: block; font-size: 0.65rem; color: var(--forest-mid);
+            background: rgba(181, 164, 120, 0.08); padding: 8px 10px;
+            border-radius: 4px; line-height: 1.4; margin-top: 10px; border-left: 2px solid var(--gold-accent);
+        }
+
+        .phase-box {
+            background: white; border-radius: 8px; overflow: hidden; margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .phase-head {
+            background: #f8f7f2; padding: 15px 20px; border-bottom: 1px solid rgba(181, 164, 120, 0.2);
+            font-family: 'Noto Serif TC', serif; color: var(--forest-deep); font-weight: 900;
+        }
+
+        .phase-body { padding: 15px 20px; }
+
+        /* 付款明細數字顏色強化 */
+        .val-main { color: var(--price-main); font-weight: 700; }
+        .val-sub { color: var(--price-sub); font-weight: 700; }
+        .val-total { color: var(--price-total); font-size: 1.1rem; font-weight: 900; }
+
+        .total-highlight {
+            margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--paper-texture);
+            color: var(--forest-deep); font-weight: 700;
+        }
+
+        /* 優化底部聲明 */
+        .disclaimer-box {
+            margin: 30px 0; padding: 20px; background: #fff;
+            border: 1px solid #e0e0e0; border-radius: 8px; text-align: center;
+        }
+        .disclaimer-text {
+            font-size: 1rem; color: #a4433a; font-weight: 700;
+            line-height: 1.5; letter-spacing: 0.5px;
+        }
+
+        #loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(27, 48, 34, 0.85); display: none;
+            justify-content: center; align-items: center; z-index: 1000; color: var(--gold-accent);
+        }
+    </style>
+</head>
+<body>
+
+<div id="loading-overlay">連線資料庫中...</div>
+
+<div class="main-wrapper">
+    <div id="auth-box" class="auth-container">
+        <h2>認購單元付款明細查詢*</h2>
+        <div class="input-group">
+            <label>認購單元編號</label>
+            <input type="text" id="unit-input" placeholder="例如: C1">
+        </div>
+        <div class="input-group">
+            <label>授權密碼 </label>
+            <input type="password" id="pass-input" placeholder="請輸入授權碼">
+        </div>
+        <button class="btn-gold" id="login-btn" onclick="handleVerify()">進入查詢</button>
+        <p id="err-msg" style="color:#a4433a; font-size:0.8rem; margin-top:15px; min-height:1.2em;"></p>
+    </div>
+
+    <div id="payment-content">
+        <div class="header-section">
+            <h1 id="res-unit-name">--</h1>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.75rem; letter-spacing: 2px;">潤德莊園 • PAYMENT SCHEDULE</p>
+        </div>
+
+        <div class="summary-card">
+            <div class="data-row"><span class="label">認購總面積</span><span class="value" id="res-area">-- 坪</span></div>
+            <div class="data-row"><span class="label">土地地號</span><span class="value" id="res-land">--</span></div>
+            <div class="data-row"><span class="label">認購總價款*</span><span class="price-focus" id="res-total">-- 萬</span></div>
+        </div>
+
+        <div class="detail-section">
+            <div class="data-row"><span class="label">主約款總價*</span><span class="value" id="res-main-total">-- 萬</span></div>
+            <div class="data-row" style="border-top: 1px dashed #eee; margin-top: 5px;"><span class="label">● 主約單價</span><span class="unit-price" id="res-main-price">-- 萬/坪</span></div>
+            <div class="sub-heading">● 主約款包含*：權狀面積，公設持分，公設預撥地，487-223特二（變），農地等權益。</div>
+        </div>
+
+        <div class="detail-section">
+            <div class="data-row"><span class="label">附約款總價*</span><span class="value" id="res-sub-total">-- 萬</span></div>
+            <div class="data-row" style="border-top: 1px dashed #eee; margin-top: 5px;"><span class="label">● 附約單價</span><span class="unit-price" id="res-sub-price">-- 萬/坪</span></div>
+            <div class="sub-heading">● 附約款包含*：社區基金，487-223特二（變）回饋金，土地整合顧問費及仲介中人費等。</div>
+        </div>
+
+        <div class="phase-box">
+            <div class="phase-head">第一期：簽約款</div>
+            <div class="phase-body">
+                <div class="data-row"><span class="label">主約款 (30%)</span><span class="val-main" id="p1-m">-- 萬</span></div>
+                <div class="data-row"><span class="label">附約款 (100%)</span><span class="val-sub" id="p1-s">-- 萬</span></div>
+                <div class="data-row total-highlight"><span>本期合計</span><span class="val-total" id="p1-t">-- 萬</span></div>
+            </div>
+        </div>
+
+        <div class="phase-box">
+            <div class="phase-head">第二期：備件款『簽約後50天』</div>
+            <div class="phase-body">
+                <div class="data-row"><span class="label">主約款 (20%)</span><span class="val-main" id="p2-m">-- 萬</span></div>
+                <div class="data-row total-highlight"><span>本期合計</span><span class="val-total" id="p2-t">-- 萬</span></div>
+            </div>
+        </div>
+
+        <div class="phase-box">
+            <div class="phase-head">第三期：完稅款</div>
+            <div class="phase-body">
+                <div class="data-row"><span class="label">主約款 (50%)</span><span class="val-main" id="p3-m">-- 萬</span></div>
+                <div class="data-row total-highlight"><span>本期合計</span><span class="val-total" id="p3-t">-- 萬</span></div>
+            </div>
+        </div>
+
+        <div class="disclaimer-box">
+            <p class="disclaimer-text">
+                本付款明細之總價與期程僅供參考，<br>
+                最終仍以「主附約正式契約書」所載為準。
+            </p>
+        </div>
+
+        <button class="btn-gold" style="background:#444; margin-bottom:40px; letter-spacing:2px;" onclick="location.reload()">重新查詢</button>
+    </div>
+</div>
+
+<script>
+// ==========================================
+// 數據庫連接配置
+// ==========================================
+const API_URL = "https://script.google.com/macros/s/AKfycbx0Rf-5gUqfYHf1MPNuLGbhvtDB1xpwKjyPoxosFOOsJEpqqafs5wGti3II1tU-vpHP/exec"; 
+
+async function handleVerify() {
+    const unitInput = document.getElementById('unit-input').value.trim().toUpperCase();
+    const passInput = document.getElementById('pass-input').value.trim();
+    const errMsg = document.getElementById('err-msg');
+    const loading = document.getElementById('loading-overlay');
+
+    if (unitInput === "") {
+        errMsg.innerText = "請輸入單元編號";
+        return;
+    }
+    
+    if (passInput === "") {
+        errMsg.innerText = "請輸入授權密碼";
+        return;
+    }
+
+    loading.style.display = 'flex';
+    errMsg.innerText = "";
+
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error("網路連線異常");
+        
+        const allData = await response.json();
+        
+        // 修改處：根據輸入的單元編號(ID)與密碼(password)進行匹配
+        const target = allData.find(u => 
+            u.unitNo.toUpperCase() === unitInput && 
+            String(u.password).trim() === passInput
+        );
+
+        if (target) {
+            renderPayment(target);
+        } else {
+            errMsg.innerText = "單元編號或授權密碼錯誤";
+        }
+    } catch (e) {
+        console.error(e);
+        errMsg.innerText = "系統連線中，或資料格式讀取錯誤";
+    } finally {
+        loading.style.display = 'none';
+    }
+}
+
+function renderPayment(data) {
+    document.getElementById('auth-box').style.display = 'none';
+    document.getElementById('payment-content').style.display = 'block';
+
+    document.getElementById('res-unit-name').innerText = `認購單元付款明細 : ${data.unitNo}`;
+    document.getElementById('res-area').innerText = data.area + " 坪";
+    
+    const landText = Array.isArray(data.landNos) ? data.landNos.join(", ") : data.landNos;
+    document.getElementById('res-land').innerText = landText;
+    
+    document.getElementById('res-total').innerText = data.totalPrice + " 萬";
+    document.getElementById('res-main-total').innerText = data.mainTotal + " 萬";
+    document.getElementById('res-sub-total').innerText = data.subTotal + " 萬";
+
+    document.getElementById('res-main-price').innerText = (data.mainPricePerPing || "--") + " 萬/坪";
+    document.getElementById('res-sub-price').innerText = (data.subPricePerPing || "--") + " 萬/坪";
+
+    // 付款期程計算
+    const p1_main = (data.mainTotal * 0.3).toFixed(2);
+    const p1_sub = (data.subTotal * 1.0).toFixed(2);
+    const p2_main = (data.mainTotal * 0.2).toFixed(2);
+    const p3_main = (data.mainTotal * 0.5).toFixed(2);
+
+    document.getElementById('p1-m').innerText = p1_main + " 萬";
+    document.getElementById('p1-s').innerText = p1_sub + " 萬";
+    document.getElementById('p1-t').innerText = (parseFloat(p1_main) + parseFloat(p1_sub)).toFixed(2) + " 萬";
+
+    document.getElementById('p2-m').innerText = p2_main + " 萬";
+    document.getElementById('p2-t').innerText = p2_main + " 萬";
+
+    document.getElementById('p3-m').innerText = p3_main + " 萬";
+    document.getElementById('p3-t').innerText = p3_main + " 萬";
+
+    window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
