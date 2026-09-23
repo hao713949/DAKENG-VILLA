@@ -309,8 +309,8 @@ function renderPayment(data) {
     const subTotalNum = parseFloat(data.subTotal) || 0;
 
     const formatNum = (num) => {
-        return Math.round(num * 100) / 100;
-    };
+    return num.toFixed(3);
+};
 
     // 第一期計算：主約 30% + 附約 70%
     const p1_main = formatNum(mainTotalNum * 0.30);
