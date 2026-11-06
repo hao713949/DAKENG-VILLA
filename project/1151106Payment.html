@@ -360,7 +360,7 @@ function renderPayment(data) {
     document.getElementById('res-total').innerText = (data.price || data.totalPrice || "--") + " 萬";
 
     // 建立各地號欄位 (表頭)
-    let thHtml = `<tr><th>項目</th>` + details.map(d => `<th>${d.id || d.landNo}</th>`).join('') + `</tr>`;
+    let thHtml = `<tr><th>地號</th>` + details.map(d => `<th>${d.id || d.landNo}</th>`).join('') + `</tr>`;
     
     // 1. 認購單元構成
     let areaRow = `<tr><td>土地面積</td>` + details.map(d => `<td>${d.total || d.area || "--"}</td>`).join('') + `</tr>`;
