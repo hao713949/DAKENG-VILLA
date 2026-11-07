@@ -330,8 +330,8 @@ async function handleVerify() {
 
 function formatNum(num) {
     let val = parseFloat(num);
-    if (isNaN(val)) return "0.00";
-    return (Math.round((val + Number.EPSILON) * 100) / 100).toFixed(2);
+    if (isNaN(val)) return "0.000";
+    return (Math.round((val + Number.EPSILON) * 1000) / 1000).toFixed(3);
 }
 
 function renderPayment(data) {
@@ -384,7 +384,7 @@ function renderPayment(data) {
 
     // 4. 第三期：完稅款 (主約 40%, 附約 0%)
     let p3MainRow = `<tr><td>主約款(40%)</td>` + details.map(d => `<td class="val-main">$ ${formatNum(d.mainTotal * 0.40)}</td>`).join('') + `</tr>`;
-    let p3SubRow = `<tr><td>附約款(0%)</td>` + details.map(d => `<td class="val-sub">$ 0.00</td>`).join('') + `</tr>`;
+    let p3SubRow = `<tr><td>附約款(0%)</td>` + details.map(d => `<td class="val-sub">$ 0.000</td>`).join('') + `</tr>`;
     let p3TotRow = `<tr class="row-total"><td>本期合計</td>` + details.map(d => `<td class="val-total">$ ${formatNum(d.mainTotal * 0.40)}</td>`).join('') + `</tr>`;
     document.getElementById('table-phase3').innerHTML = thHtml + p3MainRow + p3SubRow + p3TotRow;
 
