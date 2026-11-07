@@ -73,7 +73,7 @@
         #payment-content { display: none; animation: fadeIn 0.6s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 🌿 優化：極致樹影光影質感的頂部標題區塊 */
+        /* 🌿 極致樹影光影質感的頂部標題區塊 */
         .header-section {
             position: relative;
             background-color: #142218;
@@ -90,7 +90,6 @@
             box-shadow: 0 8px 24px rgba(20, 34, 24, 0.25);
         }
 
-        /* 自然樹葉影子重疊層 (Organic Leaf Shadows) */
         .header-section::before {
             content: "";
             position: absolute;
@@ -105,7 +104,6 @@
             pointer-events: none;
         }
 
-        /* 自然有機質感微粒/柔光 */
         .header-section::after {
             content: "";
             position: absolute;
@@ -137,7 +135,6 @@
         .summary-item .label { font-size: 0.75rem; color: var(--forest-mid); display: block; margin-bottom: 5px; }
         .summary-item .value { font-size: 1.1rem; font-weight: 700; color: var(--forest-deep); }
 
-        /* 表格化排版優化 */
         .table-box {
             background: white; border-radius: 8px; overflow: hidden; margin-bottom: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid rgba(181, 164, 120, 0.2);
@@ -162,13 +159,11 @@
         .data-table td:first-child, .data-table th:first-child { text-align: left; padding-left: 15px; font-weight: 500; color: var(--forest-mid); }
         .data-table tr:last-child td { border-bottom: none; }
 
-        /* 數字樣式 */
         .val-main { color: var(--price-main); font-weight: 700; }
         .val-sub { color: var(--price-sub); font-weight: 700; }
         .val-total { color: var(--price-total); font-weight: 900; }
         .row-total { background: #faf9f5; font-weight: 700; }
 
-        /* 說明文字區塊 */
         .note-section {
             background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 15px;
             font-size: 0.75rem; color: var(--forest-mid); line-height: 1.5;
@@ -177,7 +172,6 @@
         .note-section p { margin-bottom: 5px; }
         .note-section p:last-child { margin-bottom: 0; }
 
-        /* 底部聲明 */
         .disclaimer-box {
             margin: 25px 0; padding: 15px; background: #fff;
             border: 1px solid #e0e0e0; border-radius: 8px; text-align: center;
@@ -231,7 +225,6 @@
             </div>
         </div>
 
-        <!-- 各地號主約與附約款明細 -->
         <div class="table-box">
             <div class="table-head">認購單元構成</div>
             <div class="table-responsive">
@@ -244,7 +237,6 @@
             <p><strong>*附約款包含：</strong>社區基金，487-223特二（變）變更回饋金，土地整合顧問費，仲介中人費，開發計畫變更顧問費等。</p>
         </div>
 
-        <!-- 第一期 -->
         <div class="table-box">
             <div class="table-head">第一期：簽約款</div>
             <div class="table-responsive">
@@ -252,7 +244,6 @@
             </div>
         </div>
 
-        <!-- 第二期 -->
         <div class="table-box">
             <div class="table-head">第二期：備件款 『簽約後40天』</div>
             <div class="table-responsive">
@@ -260,7 +251,6 @@
             </div>
         </div>
 
-        <!-- 第三期 -->
         <div class="table-box">
             <div class="table-head">第三期：完稅款</div>
             <div class="table-responsive">
@@ -300,7 +290,6 @@ async function handleVerify() {
         
         const allData = await response.json();
         
-        // 支援陣列或物件格式的 API 回傳資料
         let target = null;
         if (Array.isArray(allData)) {
             target = allData.find(u => 
@@ -341,7 +330,6 @@ function renderPayment(data) {
     const unitId = data.unitNo || data.id || "--";
     document.getElementById('res-unit-title').innerText = `認購單元 ${unitId}`;
     
-    // 處理地號列表
     let details = data.landDetails || [];
     if (details.length === 0 && data.landNos) {
         const nos = Array.isArray(data.landNos) ? data.landNos : [data.landNos];
@@ -359,10 +347,8 @@ function renderPayment(data) {
     document.getElementById('res-area').innerText = (data.area || data.totalArea || "--") + " 坪";
     document.getElementById('res-total').innerText = (data.price || data.totalPrice || "--") + " 萬";
 
-    // 建立各地號欄位 (表頭)
     let thHtml = `<tr><th>地號</th>` + details.map(d => `<th>${d.id || d.landNo}</th>`).join('') + `</tr>`;
     
-    // 1. 認購單元構成
     let areaRow = `<tr><td>土地面積</td>` + details.map(d => `<td>${d.total || d.area || "--"}</td>`).join('') + `</tr>`;
     let mainRow = `<tr><td>主約款</td>` + details.map(d => `<td class="val-main">$ ${formatNum(d.mainTotal)}</td>`).join('') + `</tr>`;
     let unitRow = `<tr><td>主約款單價</td>` + details.map(d => `<td>$ ${d.unitPrice || data.mainPricePerPing || "--"}</td>`).join('') + `</tr>`;
@@ -370,22 +356,30 @@ function renderPayment(data) {
 
     document.getElementById('table-land-details').innerHTML = thHtml + areaRow + mainRow + unitRow + subRow;
 
-    // 2. 第一期：簽約款 (主約 30%, 附約 70%)
-    let p1MainRow = `<tr><td>主約款(30%)</td>` + details.map(d => `<td class="val-main">$ ${formatNum(d.mainTotal * 0.30)}</td>`).join('') + `</tr>`;
-    let p1SubRow = `<tr><td>附約款(70%)</td>` + details.map(d => `<td class="val-sub">$ ${formatNum(d.subTotal * 0.70)}</td>`).join('') + `</tr>`;
-    let p1TotRow = `<tr class="row-total"><td>本期合計</td>` + details.map(d => `<td class="val-total">$ ${formatNum((d.mainTotal * 0.30) + (d.subTotal * 0.70))}</td>`).join('') + `</tr>`;
+    // 2. 第一期：簽約款 (主約 30%, 附約 70%) —— 改為相加已格式化的金額以確保加總完美一致
+    let p1MainVals = details.map(d => parseFloat(formatNum(d.mainTotal * 0.30)));
+    let p1SubVals = details.map(d => parseFloat(formatNum(d.subTotal * 0.70)));
+
+    let p1MainRow = `<tr><td>主約款(30%)</td>` + p1MainVals.map(v => `<td class="val-main">$ ${formatNum(v)}</td>`).join('') + `</tr>`;
+    let p1SubRow = `<tr><td>附約款(70%)</td>` + p1SubVals.map(v => `<td class="val-sub">$ ${formatNum(v)}</td>`).join('') + `</tr>`;
+    let p1TotRow = `<tr class="row-total"><td>本期合計</td>` + p1MainVals.map((v, i) => `<td class="val-total">$ ${formatNum(v + p1SubVals[i])}</td>`).join('') + `</tr>`;
     document.getElementById('table-phase1').innerHTML = thHtml + p1MainRow + p1SubRow + p1TotRow;
 
     // 3. 第二期：備件款 (主約 30%, 附約 30%)
-    let p2MainRow = `<tr><td>主約款(30%)</td>` + details.map(d => `<td class="val-main">$ ${formatNum(d.mainTotal * 0.30)}</td>`).join('') + `</tr>`;
-    let p2SubRow = `<tr><td>附約款(30%)</td>` + details.map(d => `<td class="val-sub">$ ${formatNum(d.subTotal * 0.30)}</td>`).join('') + `</tr>`;
-    let p2TotRow = `<tr class="row-total"><td>本期合計</td>` + details.map(d => `<td class="val-total">$ ${formatNum((d.mainTotal * 0.30) + (d.subTotal * 0.30))}</td>`).join('') + `</tr>`;
+    let p2MainVals = details.map(d => parseFloat(formatNum(d.mainTotal * 0.30)));
+    let p2SubVals = details.map(d => parseFloat(formatNum(d.subTotal * 0.30)));
+
+    let p2MainRow = `<tr><td>主約款(30%)</td>` + p2MainVals.map(v => `<td class="val-main">$ ${formatNum(v)}</td>`).join('') + `</tr>`;
+    let p2SubRow = `<tr><td>附約款(30%)</td>` + p2SubVals.map(v => `<td class="val-sub">$ ${formatNum(v)}</td>`).join('') + `</tr>`;
+    let p2TotRow = `<tr class="row-total"><td>本期合計</td>` + p2MainVals.map((v, i) => `<td class="val-total">$ ${formatNum(v + p2SubVals[i])}</td>`).join('') + `</tr>`;
     document.getElementById('table-phase2').innerHTML = thHtml + p2MainRow + p2SubRow + p2TotRow;
 
     // 4. 第三期：完稅款 (主約 40%, 附約 0%)
-    let p3MainRow = `<tr><td>主約款(40%)</td>` + details.map(d => `<td class="val-main">$ ${formatNum(d.mainTotal * 0.40)}</td>`).join('') + `</tr>`;
+    let p3MainVals = details.map(d => parseFloat(formatNum(d.mainTotal * 0.40)));
+
+    let p3MainRow = `<tr><td>主約款(40%)</td>` + p3MainVals.map(v => `<td class="val-main">$ ${formatNum(v)}</td>`).join('') + `</tr>`;
     let p3SubRow = `<tr><td>附約款(0%)</td>` + details.map(d => `<td class="val-sub">$ 0.000</td>`).join('') + `</tr>`;
-    let p3TotRow = `<tr class="row-total"><td>本期合計</td>` + details.map(d => `<td class="val-total">$ ${formatNum(d.mainTotal * 0.40)}</td>`).join('') + `</tr>`;
+    let p3TotRow = `<tr class="row-total"><td>本期合計</td>` + p3MainVals.map(v => `<td class="val-total">$ ${formatNum(v)}</td>`).join('') + `</tr>`;
     document.getElementById('table-phase3').innerHTML = thHtml + p3MainRow + p3SubRow + p3TotRow;
 
     window.scrollTo(0, 0);
